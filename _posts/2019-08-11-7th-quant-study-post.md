@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Quantitative Trading With R-6"
+title: "Quantitative Trading With R-7"
 subtitle: "스프레드 구성, 신호 생성과 검증"
 categories: data
 comments: true
