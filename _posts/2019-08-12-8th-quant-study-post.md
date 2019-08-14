@@ -103,34 +103,36 @@ tail(data_out, 3)
 ```R
 # 수익 곡선을 계산할 함수
 compute_equity_curve <- function(qty, price) {
-    cash_buy <- ifelse(sign(qty) == 1, qty * price, 0)
-    cash_sell <- ifelse(sign(qty) == -1, -qty * price, 0)
-    position <- cumsum(cash_buy)
-    cumulative_buy <- cumsum(cash_buy)
-    cumulative_sell <- cumsum(cash_sell)
-    
-    equity <- cumulative_sell - cumulative_buy + position * price
-    return(equity)
+
+  cash_buy <- ifelse(sign(qty) == 1, qty * price, 0)
+  cash_sell <- ifelse(sign(qty) == -1, -qty * price, 0)
+  position <- cumsum(qty)
+  cumulative_buy <- cumsum(cash_buy)
+  cumulative_sell <- cumsum(cash_sell)
+
+  equity <- cumulative_sell - cumulative_buy + position * price
+  return(equity)
 }
+
 
 data_out$equity_curve_x <- compute_equity_curve(data_out$qty_x, data_out$x)
 data_out$equity_curve_y <- compute_equity_curve(data_out$qty_y, data_out$y)
 
-plot(data_out$equity_curve_x + 
-    data_out$equity_curve_y, type = "l",
-    main = "AAPL / SPY spread", ylab = "P&L",
-    cex.main = 0.8,
-    cex.axis = 0.8,
-    cex.lab = 0.8)
+plot(data_out$equity_curve_x +
+  data_out$equity_curve_y, type = 'l',
+  main = "AAPL / SPY spread", ylab = "P&L",
+  cex.main = 0.8,
+  cex.axis = 0.8,
+  cex.lab = 0.8)
 ```
 
-![](https://imgur.com/jBGZSuW.png)
+![](https://imgur.com/KsTcNXA.png)
 
 몇 가지 사실을 정리하자.
 
-1. 전체적으로 우상향 곡선이다. 이 전략은 테스트 기간 동안 수익을 낸다.(생각했던 것보다 훨씬!)
-2. 전략에 손실을 내거나 급격한 수익을 내는 구간은 없다. 안정적이다.
-3. 전략의 리스크를 조금 더 늘려도 좋을 것 같다.
+1. 전체적으로 우상향 곡선이다. 이 전략은 테스트 기간 동안 수익을 낸다.
+2. 전략에 손실을 내거나 급격한 수익을 내는 구간이 있다.
+3. 전략의 리스크를 줄일 필요가 있다.
 
 다음은 고려할 사항들이다.
 
