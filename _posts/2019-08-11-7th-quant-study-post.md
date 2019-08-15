@@ -181,7 +181,7 @@ plot(data$spread, main = "AAPL vs. SPY In-Sample",
 
 ```R
 window_length <- 10
-start_data <- "2012-01-01"
+start_date <- "2011-01-01"
 end_date <- "2013-12-31"
 range <- paste(start_date, "::", end_date, sep = "")
 
@@ -196,11 +196,6 @@ beta_out_of_sample <- rolling_beta(diff(df), window_length)
 data_out <- merge(beta_out_of_sample, df)
 data_out$spread <- data_out
 data_out$spread <- data_out$y - lag(beta_out_of_sample, 1) * data_out$x
- 
-plot(data$spread, main = "AAPL vs. SPY out of sample", 
-     cex.main = 0.8, 
-     cex.lab = 0.8, 
-     cex.axis = 0.8)
 ```
 
 트레이딩 로직은 다음과 같이 요약될 수 있다.

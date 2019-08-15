@@ -3,7 +3,6 @@ layout: post
 title: "Who am I, What can I do, What to do."
 subtitle: "future"
 categories: diary
-tags: diary
 comments: true
 ---
 

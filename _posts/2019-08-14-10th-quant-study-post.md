@@ -52,7 +52,7 @@ plot(drawdown(equity_curve), main = "Drawdown of equity curve",
 
 ![](https://imgur.com/A6wwIT9.png)
 
-최대 손실이 약 2500000임을 확인할 수 있다. 평균 손실은 264700이다. 전략의 샤프 지수는 다음과 같다.
+최대 손실이 약 1061$임을 확인할 수 있다. 평균 손실은 약 251$다. 전략의 샤프 지수는 다음과 같다.
 
 ```R
 equity <- as.numeric(equity_curve[, 1])
@@ -61,10 +61,10 @@ equity_curve_returns <- equity/c(0, equity[-length(equity)])
 invalid_values <- is.infinite(equity_curve_returns)|is.nan(equity_curve_returns)
 
 sharpe_ratio(equity_curve_returns[!invalid_values], 0.03)
-## [1] 0.4502285
+## [1] 0.3848998
 ```
 
-2년간의 샤프 지수는 0.45이다. 
+2년간의 샤프 지수는 0.38이다. 
 
 샤프 지수 외에도 다른 리스크 지표들은 많다. 그 중 고려할 만한 지표들이다.
 
