@@ -95,11 +95,122 @@ symbols <- c("XLB", #SPDR Materials sector
 # SPDR ETF가 먼저, iShares ETF가 다음으로
 if(!"XLB" %in% ls()) {
   # 데이터가 없으면 야후에서 불러옴
-  suppressMessages(getSymbols(symbols, from = from,
-    to = to,  src = "yahoo", adjust = TRUE))
+  getSymbols(symbols, from = from, to = to)
 }
 
 # 금융 상품 유형 정의
 stock(symbols, currency = "USD", multiplier = 1)
 ```
 
+
+
+**첫 번째 전략: 단순한 추세 추종**
+
+이제 첫 번째 전략을 백테스트해본다. 이 전략은 앞에서 만든 데모 데이터 파일을 이용하고 안드레아스 클레노의 단춘 추세 추종 전략에 기반을 둔다.
+
+전략을 위해 일간 데이터를 사용한다. 신호는 R의 ```lag()```로 생성하고, 1년 전보다 가격이 높으면 매도, 가격이 낮으면 매수한다. 상품들 사이 위험을 동일하게 배분하기 위한 10일 ATR을 이용해 주문 주량을 조절하고, 거래당 2%의 위험을 가진다. ATR은 평균 실제 범위를 의미하며, TTR 패키지에서 사용 가능한 지표이다.
+
+다음은 주문 수량을 계산하는 코드다.
+
+```R
+"lagATR" <- function(HLC, n = 14, maType, lag = 1, ...) {
+  ATR <- ATR(HLC, n = n, maType = maType, ...)
+  ATR <- lag(ATR, lag)
+  out <- ATR$atr
+  colnames(out) <- "atr"
+  return(out)
+}
+
+"osDollarATR" <- function(orderside, tradeSize, pctATR,
+  maxPctATR = pctATR,  data, timestamp,
+  symbol, prefer = "Open", portfolio, integerQty = TRUE,
+  atrMod = "", rebal = FALSE, ...) {
+    if(tradeSize > 0 & orderside == "short"){
+      tradeSize <- tradeSize * -1
+    }
+
+    pos <- getPosQty(portfolio, symbol, timestamp)
+    atrString <- paste0("atr", atrMod)
+    atrCol <- grep(atrString, colnames(mktdata))
+
+    if(length(atrCol) == 0) {
+      stop(paste("Term", atrString,
+      "not found in mktdata column names."))
+    }
+
+    atrTimeStamp <- mktdata[timestamp, atrCol]
+    if(is.na(atrTimeStamp) | atrTimeStamp == 0) {
+      stop(paste("ATR corresponding to", atrString,
+      "is invalid at this point in time.  Add a logical
+      operator to account for this."))
+    }
+   
+    dollarATR <- pos * atrTimeStamp
+
+    desiredDollarATR <- pctATR * tradeSize
+    remainingRiskCapacity <- tradeSize * maxPctATR - dollarATR
+
+    if(orderside == "long"){
+      qty <- min(tradeSize * pctATR / atrTimeStamp,
+        remainingRiskCapacity / atrTimeStamp)
+    } else {
+      qty <- max(tradeSize * pctATR / atrTimeStamp,
+        remainingRiskCapacity / atrTimeStamp)
+    }
+
+    if(integerQty) {
+      qty <- trunc(qty)
+    }
+    if(!rebal) {
+      if(orderside == "long" & qty < 0) {
+        qty <- 0
+      }
+      if(orderside == "short" & qty > 0) {
+        qty <- 0 
+      }
+    }
+    if(rebal) {
+      if(pos == 0) {
+        qty <- 0
+      } 
+    }
+  return(qty)
+}
+```
+
+첫 번째 함수는 지연 ATR을 생성한다. 두 번째 함수는 첫 번쨰 결과를 찾아 거래 규모와 리스크에 맞춰 매수, 매도할 때 가장 작은 정수로 변환해 수량을 계산한다. 예를 들어 거래 규모가 10000이고 2%위험을 감수한다면 매수로 200ATR이 가능하고, 매도로 -200ATR이 가능하다.
+
+다음은 전략 설정이다.
+
+```R
+require(quantmod)
+require(quantstrat)
+require(PerformanceAnalytics)
+
+initDate = "1990-01-01"
+from = "2003-01-01"
+to = "2013-12-31"
+options(width = 70)
+
+source("C:/Users/이희웅/Desktop/demoData.R")
+
+tradeSize <- 10000
+initEq <- tradeSize * length(symbols)
+
+strategy.st <- "Clenow_Simple"
+portfolio.st <- "Clenow_Simple"
+account.st <- "Clenow_Simple"
+rm.strat(portfolio.st)
+rm.strat(strategy.st)
+
+initPortf(portfolio.st, symbols = symbols, initDate = initDate, currency = 'USD')
+
+initAcct(account.st, portfolios = portfolio.st, 
+        initDate = initDate, currency = 'USD', initEq = initEq)
+
+initOrders(portfolio.st, initDate = initDate)
+
+strategy(strategy.st, store = TRUE)
+```
+
+먼저 quantstrat와 PerformanceAnalytics 패키지를 불러온다. 그리고 세 개의 날짜 initDate, from, to를 초기화한다. 초기 자본을 설정하고, 이름을 설정한 뒤 전략 환경을 초기화한다. 그 다음 포트폴리오, 계정, 주문을 정해진 순서대로 초기화한다. 마지막으로 앞으로의 사용을 위해 전략 객체를 저장한다.
