@@ -95,7 +95,7 @@ symbols <- c("XLB", #SPDR Materials sector
 # SPDR ETF가 먼저, iShares ETF가 다음으로
 if(!"XLB" %in% ls()) {
   # 데이터가 없으면 야후에서 불러옴
-  getSymbols(symbols, from = from, to = to)
+  suppressMessages(getSymbols(symbols, from = from, to = to))
 }
 
 # 금융 상품 유형 정의
@@ -214,3 +214,170 @@ strategy(strategy.st, store = TRUE)
 ```
 
 먼저 quantstrat와 PerformanceAnalytics 패키지를 불러온다. 그리고 세 개의 날짜 initDate, from, to를 초기화한다. 초기 자본을 설정하고, 이름을 설정한 뒤 전략 환경을 초기화한다. 그 다음 포트폴리오, 계정, 주문을 정해진 순서대로 초기화한다. 마지막으로 앞으로의 사용을 위해 전략 객체를 저장한다.
+
+
+
+**첫 번째 전략 백테스팅**
+
+먼저 생성 지표에 사용할 함수와 매개변수를 설정한다.
+
+```R
+nLag = 252
+pctATR = 0.02
+period = 10
+
+namedLag <- function(x, k = 1, na.pad = TRUE, ...) {
+  out <- lag(x, k = k, na.pad = na.pad, ...)
+  out[is.na(out)] <- x[is.na(out)]
+  colnames(out) <- "namedLag"
+  return(out)
+}
+```
+
+252일동안 시간 지연을 사용하고, 2%의 리스크를 가지며 10일 ATR을 사용할 것이다.
+
+```R
+add.indicator(strategy.st, name = "namedLag",
+  arguments = list(x = quote(Cl(mktdata)), k = nLag),
+  label = "ind")
+
+add.indicator(strategy.st, name = "lagATR",
+  arguments = list(HLC = quote(HLC(mktdata)), n = period),
+  label = "atrX")
+
+test <- applyIndicators(strategy.st, mktdata = OHLC(XLB))
+head(round(test, 2), 253)
+```
+
+마지막 두 열의 이름은 namedLag.ind와 atr.atrX이다. atrX는 전략에 쓰이는 주문 수량을 적절히 조절하는 데 사용할 열을 찾는 기능을 제공한다.
+
+지표에 추가되는 인자들은 매우 직관적이다. 모든 개별 지표 추가는 네 가지 인자와 함께 ```add.indicator()``` 함수를 통해 호출된다.
+
+1. 지표를 추가할 전략
+2. 계산을 수행할 함수의 이름
+3. 위 함수의 인자
+4. 지표의 이름
+
+신호는 매수 진입, 매수 청산, 매도 진입, 매도 청산이 있다. quantstrat에서는 청산이 진입보다 우선시되기 때문에 진입과 청산이 동시에 발생하면 청산 후 진입이 진행된다.. 매도에서는 청산 후 역매매 전략이 작동한다. 다음은 백테스트에 신호를 추가하는 방법이다.
+
+```R
+add.signal(strategy.st, name = "sigCrossover",
+  arguments = list(columns = c("Close", "namedLag.ind"),
+  relationship = "gt"),
+  label = "coverOrBuy")
+
+add.signal(strategy.st, name = "sigCrossover",
+  arguments = list(columns = c("Close", "namedLag.ind"),
+  relationship = "lt"),
+  label = "sellOrShort")
+```
+
+신호는 지표와 동일한 형식을 지닌다. 함수 호출, 전략 이름, 필요한 함수의 이름, 인자, 이름으로 구성된다.
+
+```sigCrossover``` 함수는 ```relationship``` 인자를 통해 주어진 첫 번째 열이 두 번째 열을 돌파할 때 알려준다. 여기서 gt는 초과, lt는 미만을 의미한다. 첫 번째 신호는 가격이 지연된 신호를 돌파할 때, 두 번째는 그 반대일 때이다.
+
+트레이딩 시스템 트라이팩터의 마지막 요소는 ```add.rule``` 함수다. ```quantstrat```에서 규칙을 설정하는 방법을 보자.
+
+```R
+# 매수 규칙
+add.rule(strategy.st, name = "ruleSignal",
+  arguments = list(sigcol = "coverOrBuy",
+  sigval = TRUE, ordertype = "market",
+  orderside = "long", replace = FALSE,
+  prefer = "Open", osFUN = osDollarATR,
+  tradeSize = tradeSize, pctATR = pctATR,
+  atrMod = "X"), type = "enter", path.dep = TRUE)
+
+add.rule(strategy.st, name = "ruleSignal",
+  arguments = list(sigcol = "sellOrShort",
+  sigval = TRUE, orderqty = "all",
+  ordertype = "market", orderside = "long",
+  replace = FALSE, prefer = "Open"),
+  type = "exit", path.dep = TRUE)
+
+# 매도 규칙
+add.rule(strategy.st, name = "ruleSignal",
+  arguments = list(sigcol = "sellOrShort",
+  sigval = TRUE, ordertype = "market",
+  orderside = "short", replace = FALSE,
+  prefer = "Open", osFUN = osDollarATR,
+  tradeSize = -tradeSize, pctATR = pctATR,
+  atrMod = "X"), type = "enter", path.dep = TRUE)
+
+add.rule(strategy.st, name = "ruleSignal",
+  arguments = list(sigcol = "coverOrBuy",
+  sigval = TRUE, orderqty = "all",
+  ordertype = "market", orderside = "short",
+  replace = FALSE, prefer = "Open"),
+  type = "exit", path.dep = TRUE)
+```
+
+대다수의 ```quantstrat```의 규칙에는 ```ruleSignal```이 사용된다. 
+
+중요한 인자들이다.
+
+1. sigcol: 신호를 포함하는 열
+2. ordertype: 주로 시장가 주문으로 사용한다. 지정가 주문이나 손절 주문에도 사용할 수 있다.
+3. perfer: 월간 데이터까지 모든 시간 빈도에서 ```quantstrat```는 신호가 나온 뒤 다음 봉에 진입하는데, 기본은 종가 매수다. 전략이 일봉을 다룬다면 이를 시가로 바꾸는 것이 바람직하다.
+4. orderside: 매수 혹은 매도로 주문 수량 조절 함수에서 사용된다.
+5. replace: 항상 TRUE로 설정한다. FALSE면 해당 시간동안 다른 전략을 사용한다.
+6. osFUN: ATR 주문 조절 함수가 호출되는 부분이다.
+7. type: 주로 진입 혹은 청산.
+8. path: ruleSignal에서 항상 TRUE로 설정한다.
+
+이제 전략이 정의됐으니 실행한다.
+
+```R
+t1 <- Sys.time()
+out <- applyStrategy(strategy = strategy.st,
+  portfolios = portfolio.st)
+
+t2 <- Sys.time()
+print(t2 - t1)
+```
+
+정상적으로 작성되었다면 다음과 같이 나온다.
+
+```R
+## [1] "2007-10-22 00:00:00 XLY -655 @ 32.3578893111826"
+## [1] "2007-10-22 00:00:00 XLY -393 @ 32.3578893111826"
+## [1] "2007-10-23 00:00:00 XLY 393 @ 33.1349846702336"
+## [1] "2007-10-23 00:00:00 XLY 358 @ 33.1349846702336"
+## [1] "2007-10-25 00:00:00 XLY -358 @ 32.8639048938205"
+## [1] "2007-10-25 00:00:00 XLY -333 @ 32.8639048938205"
+## [1] "2009-09-30 00:00:00 XLY 333 @ 25.9947501843176"
+## [1] "2009-09-30 00:00:00 XLY 449 @ 25.9947501843176"
+## [1] "2009-10-02 00:00:00 XLY -449 @ 24.8800203565938"
+```
+
+
+
+**성과 평가**
+
+이제 실행된 결과의 효율성을 분석할 것이다.
+
+```R
+updatePortf(portfolio.st)
+dateRange <- time(getPortfolio(portfolio.st)$summary)[-1]
+updateAcct(portfolio.st, dateRange)
+updateEndEq(account.st)
+```
+
+위의 코드는 손익을 계산하고 거래 내역을 만들도록 호출한다. 거래 통계치는 수익의 %비율, 수익 팩터, 평균 손익비 등이 있다.
+
+```R
+tStats <- tradeStats(Portfolios = portfolio.st, use = "trades",
+  inclZeroDays = FALSE)
+tStats[, 4:ncol(tStats)] <- round(tStats[, 4:ncol(tStats)], 2)
+  
+print(data.frame(t(tStats[,-c(1,2)])))
+aggPF <- sum(tStats$Gross.Profits) / -sum(tStats$Gross.Losses)
+aggCorrect <- mean(tStats$Percent.Positive)
+numTrades <- sum(tStats$Num.Trades)
+meanAvgWLR <- mean(tStats$Avg.WinLoss.Ratio[
+  tStats$Avg.WinLoss.Ratio < Inf], na.rm = TRUE)
+```
+
+tStats 테이블을 보면 XLP가 뛰어났다는 것을 볼 수 있고, 이는 트레이딩 전략이 이 금융 상품에 대하여 대부분의 손실을 회피할 수 있었다는 뜻이다.
+
+다음은 전략의 트레이딩 통계치를 합산하는 방법이다.
