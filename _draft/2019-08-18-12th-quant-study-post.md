@@ -188,3 +188,75 @@ updateAcct(portfolio.st,dateRange)
 updateEndEq(account.st)
 ```
 
+전략에서 sigThreshold 신호가 어떻게 작동하는지 알 수 있다. 한 번이 아니라 전체 기간 동안 발동한다는 점에서 sigCrossover, sigComparison도 사용한다. sigAND를 사용해 사용자 정의 신호를 만들고 앞에서 만든 ATR주문 로직을 다시 사용했다.
+
+
+
+**평균 회귀 전략 평가**
+
+이번 전략의 통합된 거래 통계치다.
+
+```R
+aggPF <- sum(tStats$Gross.Profits)/-sum(tStats$Gross.Losses)
+[1] 3.792043
+
+aggCorrect <- mean(tStats$Percent.Positive)
+[1] 35.515
+
+numTrades <- sum(tStats$Num.Trades)
+[1] 1158
+	
+meanAvgWLR <- mean(tStats$Avg.WinLoss.Ratio[
+    tStats$Avg.WinLoss.Ratio < Inf], na.rm = TRUE)
+[1] 12.92867
+```
+
+조금 낮은 승률, 괜찮은 수익, 약 13의 손익비를 가진다. 다음으로 몇 가지 더 중요한 성과 측정 지표를 보자. 첫 번째 통계치들은 전략이 일간으로 어떤 성과를 냈는지 보여준다. 따라서 전략의 수익 팩터는 거래당이 아니라 일간으로 통합된다. 열 번의 플러스 거래에서 10개를 취하면 수익 팩터는 무한대가 된다. 하지만 그런 거래가 하락한 날보다 상승한 날이 많을수록 일간 수익 팩터는 1에 가까워진다.
+
+다음은 일간 통계치 예제다.
+
+```R
+Stats <- dailyStats(Portfolios = portfolio.st, use = "Equity")
+rownames(dStats) <- gsub(".DailyEndEq", "", rownames(dStats))
+print(data.frame(t(dStats)))
+
+                   XLV.DailyEqPL XLY.DailyEqPL
+Total.Net.Profit         3844.99       4081.35
+Total.Days                315.00        345.00
+Winning.Days              169.00        192.00
+Losing.Days               146.00        153.00
+Avg.Day.PL                 12.21         11.83
+Med.Day.PL                 11.98         18.31
+Largest.Winner            690.23        632.56
+Largest.Loser            -821.22       -782.98
+Gross.Profits           21038.19      24586.07
+Gross.Losses           -17193.20     -20504.73
+Std.Dev.Daily.PL          166.09        177.79
+Percent.Positive           53.65         55.65
+Percent.Negative           46.35         44.35
+Profit.Factor               1.22          1.20
+Avg.Win.Day               124.49        128.05
+Med.Win.Day                94.55        101.88
+Avg.Losing.Day           -117.76       -134.02
+Med.Losing.Day            -79.56        -85.41
+Avg.Daily.PL               12.21         11.83
+Med.Daily.PL               11.98         18.31
+Std.Dev.Daily.PL.1        166.09        177.79
+Skewness                   -1.01         -1.28
+Kurtosis                   56.32         37.19
+Ann.Sharpe                  1.17          1.06
+Max.Drawdown            -2201.71      -2248.18
+Profit.To.Max.Draw          1.75          1.82
+Avg.WinLoss.Ratio           1.06          0.96
+Med.WinLoss.Ratio           1.19          1.19
+Max.Equity               3892.77       4081.35
+Min.Equity              -1228.58       -631.80
+End.Equity               3844.99       4081.35
+```
+
+다음 분석은 기간 측정을 다룬다. 사용자 함수를 정의한다.
+
+```R
+
+```
+
