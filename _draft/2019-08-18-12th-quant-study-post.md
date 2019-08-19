@@ -14,25 +14,22 @@ comments: true
 
 ```R
 connorsRSI <- function(price, nRSI = 3, nStreak = 2,
-  nPercentLookBack = 100){
+  nPercentLookBack = 100 ) {
   priceRSI <- RSI(price, nRSI)
   streakRSI <- RSI(computeStreak(price), nStreak)
-  percent <- round(runPercentRank(x = diff(log(price)),
+  percents <- round(runPercentRank(x = diff(log(price)),
     n = 100, cumulative = FALSE, exact.multiplier = 1) * 100)
   ret <- (priceRSI + streakRSI + percents) / 3
   colnames(ret) <- "connorsRSI"
-  returns(ret)
+  return(ret)
 }
 
-# 진행 중인 연속된 플러스, 마이너스 수익 계산
 computeStreak <- function(priceSeries) {
   signs <- sign(diff(priceSeries))
   posDiffs <- negDiffs <- rep(0,length(signs))
   posDiffs[signs == 1] <- 1
   negDiffs[signs == -1] <- -1
 
-  # 누적 합계와 연속 기간 중 증가하지 않은 합계 벡터 계산
-  # na.locf 이후 NA값은 0으로 처리
   posCum <- cumsum(posDiffs)
   posNAcum <- posCum
   posNAcum[posDiffs == 1] <- NA
@@ -40,7 +37,6 @@ computeStreak <- function(priceSeries) {
   posNAcum[is.na(posNAcum)] <- 0
   posStreak <- posCum - posNAcum
 
-  # 마이너스 누적 수익에 대해 반복  
   negCum <- cumsum(negDiffs)
   negNAcum <- negCum
   negNAcum[negDiffs == -1] <- NA
@@ -92,7 +88,7 @@ rm(list = ls(.blotter), envir = .blotter)
 
 currency('USD')
 Sys.setenv(TZ="UTC")
-source("demoData.R")
+source("C:/R/demoData.R")
 
 strategy.st <- "CRSIcumStrat"
 portfolio.st <- "CRSIcumStrat"
@@ -111,7 +107,6 @@ initAcct(account.st, portfolios = portfolio.st,
 initOrders(portfolio.st, initDate = initDate)
 strategy(strategy.st, store = TRUE)
 
-# 매개변수
 cumThresh <- 40
 exitThresh <- 75
 nCum <- 2
@@ -122,7 +117,6 @@ nSMA <- 200
 pctATR <- .02
 period <- 10
 
-# 지표
 add.indicator(strategy.st, name = "cumCRSI",
   arguments = list(price = quote(Cl(mktdata)), nCum = nCum,
   nRSI = nRSI, nStreak = nStreak,
@@ -143,7 +137,6 @@ add.indicator(strategy.st, name = "lagATR",
     arguments = list(HLC = quote(HLC(mktdata)), n = period),
     label = "atrX")
 
-# 신호
 add.signal(strategy.st, name = "sigThreshold",
   arguments = list(column = "cumCRSI.CRSIcum",
   threshold = cumThresh, relationship = "lt", cross = FALSE),
@@ -162,7 +155,6 @@ add.signal(strategy.st, name = "sigThreshold",
   threshold = exitThresh, relationship = "gt",
   cross = TRUE), label = "longExit")
 
-# 규칙
 add.rule(strategy.st, name = "ruleSignal",
   arguments = list(sigcol = "longEntry", sigval = TRUE,
   ordertype = "market", orderside  ="long", replace = FALSE,
@@ -174,14 +166,12 @@ add.rule(strategy.st, name = "ruleSignal",
   orderqty = "all", ordertype = "market", orderside = "long",
   replace = FALSE, prefer = "Open"), type = "exit", path.dep = TRUE)
 
-# 전략 적용
 t1 <- Sys.time()
 out <- applyStrategy(strategy = strategy.st,
   portfolios = portfolio.st)
 t2 <- Sys.time()
 print(t2 - t1)
 
-# 분석 적용
 updatePortf(portfolio.st)
 dateRange <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(portfolio.st,dateRange)
@@ -197,27 +187,25 @@ updateEndEq(account.st)
 이번 전략의 통합된 거래 통계치다.
 
 ```R
-aggPF <- sum(tStats$Gross.Profits)/-sum(tStats$Gross.Losses)
+dStats <- dailyStats(Portfolios = portfolio.st, use = "Equity")
+rownames(dStats) <- gsub(".DailyEndEq", "", rownames(dStats))
+
+aggPF <- sum(dStats$Gross.Profits)/-sum(dStats$Gross.Losses)
 [1] 3.792043
 
 aggCorrect <- mean(tStats$Percent.Positive)
-[1] 35.515
-
-numTrades <- sum(tStats$Num.Trades)
-[1] 1158
+[1] 55.03
 	
 meanAvgWLR <- mean(tStats$Avg.WinLoss.Ratio[
     tStats$Avg.WinLoss.Ratio < Inf], na.rm = TRUE)
-[1] 12.92867
+[1] 0.9776667
 ```
 
-조금 낮은 승률, 괜찮은 수익, 약 13의 손익비를 가진다. 다음으로 몇 가지 더 중요한 성과 측정 지표를 보자. 첫 번째 통계치들은 전략이 일간으로 어떤 성과를 냈는지 보여준다. 따라서 전략의 수익 팩터는 거래당이 아니라 일간으로 통합된다. 열 번의 플러스 거래에서 10개를 취하면 수익 팩터는 무한대가 된다. 하지만 그런 거래가 하락한 날보다 상승한 날이 많을수록 일간 수익 팩터는 1에 가까워진다.
+높은 승률, 괜찮은 수익, 1 이하의 손익비를 가진다(실패 시 타격이 크다). 다음으로 몇 가지 더 중요한 성과 측정 지표를 보자. 첫 번째 통계치들은 전략이 일간으로 어떤 성과를 냈는지 보여준다. 따라서 전략의 수익 팩터는 거래당이 아니라 일간으로 통합된다. 열 번의 플러스 거래에서 10개를 취하면 수익 팩터는 무한대가 된다. 하지만 그런 거래가 하락한 날보다 상승한 날이 많을수록 일간 수익 팩터는 1에 가까워진다.
 
 다음은 일간 통계치 예제다.
 
 ```R
-Stats <- dailyStats(Portfolios = portfolio.st, use = "Equity")
-rownames(dStats) <- gsub(".DailyEndEq", "", rownames(dStats))
 print(data.frame(t(dStats)))
 
                    XLV.DailyEqPL XLY.DailyEqPL
@@ -257,6 +245,109 @@ End.Equity               3844.99       4081.35
 다음 분석은 기간 측정을 다룬다. 사용자 함수를 정의한다.
 
 ```R
+durationStatistics <- function(Portfolio, Symbols,
+  includeOpenTrade = FALSE, ...) {
 
+  tmp <- list()
+  length(tmp) <- length(Symbols)
+  for(Symbol in Symbols) {
+    pts <- perTradeStats(Portfolio = Portfolio,
+      Symbol = Symbol, includeOpenTrade = includeOpenTrade)
+    pts$diff <- pts$End - pts$Start
+
+    durationSummary <- summary(as.numeric(pts$diff))
+    winDurationSummary <- summary(as.numeric(
+      pts$diff[pts$Net.Trading.PL > 0]))
+    lossDurationSummary <- summary(as.numeric(
+      pts$diff[pts$Net.Trading.PL <= 0]))
+    names(durationSummary) <-
+      c("Min", "Q1", "Med", "Mean", "Q3", "Max")
+    names(winDurationSummary) <-
+      c("Min", "Q1", "Med", "Mean", "Q3", "Max")
+    names(lossDurationSummary) <-
+      c("Min", "Q1", "Med", "Mean", "Q3", "Max")
+    names(winDurationSummary) <-
+      paste0("W", names(winDurationSummary))
+    names(lossDurationSummary) <-
+      paste0("L", names(lossDurationSummary))
+    dataRow <- data.frame(cbind(t(round(durationSummary)),
+      t(round(winDurationSummary)),
+      t(round(lossDurationSummary))))
+    tmp[[Symbol]] <- dataRow
+  }
+  out <- do.call(rbind, tmp)
+  return(out)
+}
 ```
 
+이 함수는 모든 거래를 상품별로 다섯 가지 요약과 평균을 계산해 행렬로 만든다.
+
+```R
+durStats <- durationStatistics(Portfolio = portfolio.st, Symbols = sort(symbols))
+print(durStats)
+
+    Min Q1 Med Mean Q3 Max WMin WQ1 WMed WMean WQ3 WMax LMin LQ1 LMed LMean LQ3 LMax
+XLU   1  5   8   10 14  27    1   2    6     6   8   21    6  12   16    16  20   27
+XLV   1  4   6    8 10  33    1   3    5     6   7   20    6   9   16    15  18   33
+XLY   1  3   6    7 10  22    1   2    5     6   7   20    1   8   12    11  14   22
+```
+
+통계치의 순서는 총합, 성공, 실패 순이다. 이 결과로 전략을 개선하는 방법을 알 수 있다. 실패가 성공보다 기간이 길다는 점을 주목하자. 전략을 개선할 수 있는 한 가지 방법으로 포지션이 수익을 내고 있는지 아닌지에 따라 시간 기반 청산을 수행할 수 있다. 예를 들어 일정 시간 이후 수익이 나지 않으면 거래를 청산하고 다음 단계를 기다린다.
+
+다음은 시장에 노출된 기간을 계산하는 빠른 방법으로, 시장에서 전략이 쓰이는 시간 비율을 의미한다.
+
+```R
+# 시장 노출
+tmp <- list()
+length(tmp) <- length(symbols)
+for(i in 1:nrow(dStats)) {
+  totalDays <- nrow(get(rownames(dStats)[i]))
+  mktExposure <- dStats$Total.Days[i] / totalDays
+  tmp[[i]] <- c(rownames(dStats)[i], round(mktExposure, 3))
+}
+mktExposure <- data.frame(do.call(rbind, tmp))
+colnames(mktExposure) <- c("Symbol", "MktExposure")
+```
+
+결과는 다음과 같다.
+
+```R
+print(mktExposure)
+
+   Symbol MktExposure
+1     EFA       0.113
+2     EPP       0.124
+3     EWA       0.137
+4     EWC       0.137
+5     EWG       0.126
+6     EWH       0.136
+7     EWJ       0.073
+8     EWS       0.098
+9     EWT       0.135
+10    EWU       0.103
+11    EWY       0.116
+12    EWZ       0.096
+13    EZU       0.123
+14    IEF       0.155
+15    IGE        0.15
+16    IYR       0.127
+17    IYZ       0.169
+18    LQD       0.147
+19    RWR       0.129
+20    SHY       0.114
+21    TLT       0.146
+22    XLB       0.132
+23    XLE       0.132
+24    XLF       0.104
+25    XLI       0.121
+26    XLK       0.121
+27    XLP       0.126
+28    XLU       0.139
+29    XLV       0.114
+30    XLY       0.125
+
+print(mean(as.numeric(as.character(mktExposure$MktExposure))))
+[1] 0.1256
+```
+
+평균적으로 시장에 12.5% 노출되어 있다. 다음은 전략이 만드는 수익 곡선을 보자.
