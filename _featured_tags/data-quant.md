@@ -1,6 +1,6 @@
 ---
 layout: tag-blog
-title: quant
+title: Quant
 slug: quant
 category: data
 menu: false
