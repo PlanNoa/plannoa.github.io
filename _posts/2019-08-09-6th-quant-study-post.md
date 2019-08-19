@@ -3,6 +3,7 @@ layout: post
 title: "Quantitative Trading With R-6"
 subtitle: "주식 스프레드 정의, 보통 최소 제곱법과 전체 최소 제곱법"
 categories: data
+tag: quant
 comments: true
 ---
 

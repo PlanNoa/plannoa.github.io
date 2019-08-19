@@ -1,8 +1,9 @@
 ---
 layout: tag-blog
-title: Simulation
-slug: simulation
+title: quant
+slug: quant
 category: data
 menu: false
-order: 8
+order: 10
 ---
+

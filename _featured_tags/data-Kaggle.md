@@ -4,5 +4,5 @@ title: Kaggle
 slug: kaggle
 category: data
 menu: false
-order: 3
+order: 5
 ---

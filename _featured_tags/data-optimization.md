@@ -4,5 +4,5 @@ title: Optimization
 slug: optimization
 category: data
 menu: false
-order: 12
+order: 7
 ---

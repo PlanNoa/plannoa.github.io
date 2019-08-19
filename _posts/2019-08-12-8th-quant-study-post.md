@@ -3,6 +3,7 @@ layout: post
 title: "Quantitative Trading With R-8"
 subtitle: "스프레드 거래"
 categories: data
+tag: quant
 comments: true
 ---
 
