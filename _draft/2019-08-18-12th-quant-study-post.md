@@ -350,4 +350,44 @@ print(mean(as.numeric(as.character(mktExposure$MktExposure))))
 [1] 0.1256
 ```
 
-평균적으로 시장에 12.5% 노출되어 있다. 다음은 전략이 만드는 수익 곡선을 보자.
+평균적으로 시장에 12.5% 노출되어 있다. 
+
+이 전략의 수익은 100% SPY에 투자했을 때와 비교하면 뛰어나지 않다. 급격한 손실 구간이 있는 것도 염려된다. 이는 분명 개선될 수 있는 부분이다.
+
+다음은 통합된 포트폴리오 통계치다.
+
+```R
+SharpeRatio.annualized(portfRets)
+##                                      [,1]
+## Annualized Sharpe Ratio (Rf=0%) 0.7042831
+
+Return.annualized(portfRets)
+##                        [,1]
+## Annualized Return 0.1922925
+
+maxDrawdown(portfRets)
+## [1] 0.3477767
+```
+
+연간 수익 대비 최대 손실 비율을 보면 이번 상품들 대상으로는 자금을 차입해 운용할 경우 금방 문제가 발생한다는 것을 보여준다. 마지막으로 개별 수익 곡선을 보자.
+
+```R
+chart.Posn(portfolio.st, "XLB")
+TA_CRSI <- connorsRSI(Cl(XLB), nRSI = nRSI,
+  nStreak = nStreak, nPercentLookBack = nPercentLookBack)
+add_TA(TA_CRSI, col = "red")
+
+TA_cumCRSI <- cumCRSI(price = Cl(XLB),
+  nCum = nCum, nRSI = nRSI, nStreak = nStreak,
+  nPercentLookBack = nPercentLookBack)
+add_TA(TA_cumCRSI, col = "blue")
+
+TA_lagATR <- lagATR(HLC = HLC(XLB), n = period)
+add_TA(TA_lagATR, col = "purple")
+
+TA_SMA <- SMA(Cl(XLB), n = nSMA)
+add_TA(TA_SMA, col = "blue", lwd = 2, on = 1)
+```
+
+![](https://imgur.com/hGycPqv.png)
+
