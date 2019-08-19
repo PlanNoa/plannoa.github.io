@@ -49,3 +49,85 @@ require(highfrequency)
 
 **고빈도 데이터 구성**
 
+고빈도 데이터를 xts로 저장할 시스템이 있다면 이 단계를 건너뛰어도 된다. ```highfrequency```패키지는 NYSE, TAQ, WRDS, Returns, Bloomberg 등의 다양한 입력을 받을 수 있다. 이 패키지는 여러 데이터 형식을 xts로 바꾸는 기능을 제공한다.
+
+고빈도 데이터는 일반적으로 거래의 정보를 담고 있는 각각의 시세 파일 둘로 나뉘어져 있다. ```highfrequency```패키지는 NYSE TAQ 데이터베이스의 .txt, WRDS 데이터베이스의 .csv, Tickdata.inc의 .asc 세 가지 형식의 xts파일을 파싱할 수 있다.
+
+```~/raw_data``` 폴더에 "2008-01-02", "2008-01-03" 두 개의 폴더가 있다고 해 보자. 또한 이 폴더들 안에는 NYSE에서 구매한 ```AAPL_trades.txt``` 와 ```AA_trades.txt``` 파일이 있다. 원시 데이터는 다음과 같이 변환할 수 있다.
+
+```R
+from = "2008-01-02";
+to = "2008-01-03";
+datasource = "~/raw_data";
+datadestination = "~/xts_data";
+
+convert(from, to, datasource, datadestination, trades=TRUE,
+          quotes=FALSE,ticker=c("AA","AAPL"), dir=TRUE, extension="txt",
+          header=FALSE,tradecolnames=NULL,quotecolnames=NULL,
+          format="%Y%m%d %H:%M:%S");
+```
+
+여기서 ```~/raw_data``` 폴더에 일일 데이터를 가진 ```AAPL_trades.RData``` 와 ```AA_trades.RData``` 가 포함된 "2008-01-02", "2008-01-03" 폴더가 생길 것이다. 이 데이터들은 ```TAQLoad``` 함수로 불러올 수 있다. 
+
+같은 폴더에 `IBM_quotes.csv` 와 `IBM_trades.csv`파일이 있다고 하자. 두 파일은 "2011-12-01" 부터 "2011-12-02"까지의 IBM 거래 데이터를 가지고 있다. 이 데이터는 다음과 같이 변환될 수 있다.
+
+```R
+from = "2011-12-01"; 
+to = "2011-12-02"; 
+datasource = "~/raw_data";
+datadestination = "~/xts_data";
+convert( from=from, to=to, datasource=datasource, 
+              datadestination=datadestination, trades = T,  quotes = T, 
+              ticker="IBM", dir = TRUE, extension = "csv", 
+              header = TRUE, tradecolnames = NULL, quotecolnames = NULL, 
+              format="%Y%m%d %H:%M:%S", onefile = TRUE )
+```
+
+이제 `~/xts_data` 에 "2011-12-01" ,"2011-12-02" 두 개의 폴더가 있다고 하자. 각각의 폴더는  `IBM_trades.RData` 이라는 파일을 가지고 있다. in which the trades for that day can be found and a file `IBM_quotes.RData`. 마지막으로 `TAQLoad` 함수는 데이터를 R 작업창으로 읽어올 수 있다.
+
+```R
+xts_data = TAQLoad( tickers="IBM", from="2011-12-01",
+           to="2011-12-02",trades=F,
+           quotes=TRUE, datasource=datadestination)
+head(xts_data)
+
+                    SYMBOL EX  BID      BIDSIZ OFR      OFRSIZ MODE
+2011-12-01 04:00:00 "IBM"  "P" "176.85" "1"    "188.00" " 1"   "12"
+2011-12-01 04:00:17 "IBM"  "P" "185.92" "1"    "187.74" " 1"   "12"
+2011-12-01 04:00:18 "IBM"  "P" "176.85" "1"    "187.74" " 1"   "12"
+2011-12-01 04:00:25 "IBM"  "P" "176.85" "1"    "187.73" " 1"   "12"
+2011-12-01 04:00:26 "IBM"  "P" "176.85" "1"    "188.00" " 1"   "12"
+2011-12-01 04:00:26 "IBM"  "P" "176.85" "1"    "187.74" " 1"   "12"
+```
+
+Tickdata.inc의 .asc 파일도 쉽게 변환할 수 있다. `~/raw_data`폴더에 `GLP_quotes.asc` 와`GLP_trades.asc` 파일이 있다고 하자.
+
+```R
+from = "2011-01-11"; 
+to     = "2011-03-11"; 
+datasource = "~/raw_data"; 
+datadestination = "~/xts_data";
+convert(from=from, to=to, datasource=datasource, 
+             datadestination=datadestination, trades = TRUE, 
+             quotes = TRUE, ticker="GLP", dir = TRUE, format = "%d/%m/%Y %H:%M:%OS",
+             extension = "tickdatacom", header = TRUE,  onefile = TRUE );
+```
+
+이런 경우에 `~/xts_data` 폴더에는 `GLP_trades.RData` 과 `GLP_quotes.RData` 파일을 가진 "2011-01-11", "2011-02-11", "2011-03-11" 세 개의 폴더가 있다. 이도 ```TAQLoad``` 를 이용해 읽을 수 있다.
+
+```R
+options("digits.secs"=3); #Show milliseconds
+xts_data = TAQLoad(tickers="GLP", from="2011-01-11", to="2011-01-11",
+           trades=T, quotes=F, 
+           datasource=datadestination)
+head(xts_data)
+
+                        SYMBOL EX  PRICE     SIZE   COND  CORR G127
+2011-01-11 09:30:00.338 "GLP"  "T" "18.0700" " 500" "O X" "0"  ""  
+2011-01-11 09:30:00.338 "GLP"  "T" "18.0700" " 500" "Q"   "0"  ""  
+2011-01-11 09:33:49.342 "GLP"  "T" "18.5000" " 150" "F"   "0"  ""  
+2011-01-11 09:39:29.280 "GLP"  "N" "19.2000" "4924" "O"   "0"  ""  
+2011-01-11 09:39:29.348 "GLP"  "D" "19.2400" " 500" "@"   "0"  "T" 
+2011-01-11 09:39:29.411 "GLP"  "N" "19.2400" " 200" "F"   "0"  "" 
+```
+
