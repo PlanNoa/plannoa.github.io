@@ -5,7 +5,6 @@ subtitle: "고빈도 데이터"
 categories: data
 tag: quant
 comments: true
-
 ---
 
 **고빈도 데이터**
@@ -247,7 +246,7 @@ rtscov = rTSCov(list(stock1,stock2));
 ```R
 data("sample_real5minprices");
 
-#하루 주기를 계산하고 플롯을 그린다.
+#하루 주기를 계산한다.
 out = spotVol(sample_real5minprices,P1=6,P2=4,periodicvol="TML",k=5, dummies=FALSE);
 head(out);
 
@@ -256,6 +255,3 @@ head(out);
 2005-03-04 09:40:00 -0.0005614217 0.003695715 0.001896816    1.948379
 2005-03-04 09:45:00 -0.0026443880 0.003417950 0.001896816    1.801941
 ```
-
-
-
