@@ -131,3 +131,104 @@ head(xts_data)
 2011-01-11 09:39:29.411 "GLP"  "N" "19.2400" " 200" "F"   "0"  "" 
 ```
 
+패키지에서 제공하는 샘플 데이터를 이용할 수 있다.
+
+```R
+library(highfrequency);
+data("sample_tdataraw");
+head(sample_tdataraw);
+data("sample_qdataraw");
+head(sample_qdataraw);
+```
+
+
+
+**고빈도 데이터 다루기**
+
+여러 이유로 원시 거래 데이터는 수치 에러를 가지고 있다. 이 상태의 데이터는 데이터 분석에 맞지 않고, 정제 작업은 필수적이다. `highfrequency` 패키지는 Barndorff-Nielsen의 단계별 정제를 구현했다. 밑의 표 1에는 제공하는  정제 함수의 목록이 있다. 사용자는 하나의 함수를 사용하거나 여러 정제 작업을 합쳐놓은 'wrapper' 함수를 사용할 수 있다. wrapper 함수는 원시 데이터를 불러오고 정제된 데이터를 하드 디스크에 다시 저장한다. 정제할 데이터가 여러 개인 경우 이 기능을 사용하기 좋다.
+
+정제 과정에서 데이터에 대한 정보를 위해 남은 데이터의 관측량을 제공한다.
+
+```R
+data("sample_tdataraw");
+dim(sample_tdataraw);
+[1] 48484     7
+
+tdata_afterfirstcleaning = tradesCleanup(tdataraw=sample_tdataraw,exchanges="N");
+tdata_afterfirstcleaning$report;
+
+      initial number       no zero prices      select exchange 
+               48484                48479                20795 
+     sales condition merge same timestamp 
+               20135                 9105 
+
+dim(tdata_afterfirstcleaning$tdata)
+[1] 9105    7
+```
+
+![](https://imgur.com/Gj6isTP.png)
+
+
+
+**고빈도 데이터의 집합**
+
+고빈도 데이터의 가격은 일반적으로 같은 간격으로 기록되지 않는다. 또한 가격은 종종 다른 시점에 관찰되는 반면 대부분의 다변량 추정치는 동기화된 데이터에 의존한다. 이런 불규칙적이고 비동기적인 시간 간격을 동기적이고 정해진 간격을 가진 타임 그리드로 강제할 수 있는 방법이 있다.
+
+가장 인기있는 방법인 previous tick aggregation은 각 그리드 이전의 마지막 가격을 가져와 등거리 그리드로 만든다. `highfrequency` 는 빠르고 쉬운 previous tick aggregation을 제공한다. 
+
+```R
+library("highfrequency")
+# Load sample price data
+data("sample_tdata")
+ts = sample_tdata$PRICE
+
+tsagg5min = aggregatets(ts,on="minutes",k=5)
+head(tsagg5min)
+
+                      PRICE
+2008-01-04 09:35:00 193.920
+2008-01-04 09:40:00 194.630
+2008-01-04 09:45:00 193.520
+2008-01-04 09:50:00 192.850
+2008-01-04 09:55:00 190.795
+2008-01-04 10:00:00 190.420
+
+tsagg30sec = aggregatets(ts,on="seconds",k=30);
+tail(tsagg30sec);
+
+                      PRICE
+2008-01-04 15:57:30 191.790
+2008-01-04 15:58:00 191.740
+2008-01-04 15:58:30 191.760
+2008-01-04 15:59:00 191.470
+2008-01-04 15:59:30 191.825
+2008-01-04 16:00:00 191.670
+```
+
+예시에서 가격이 각각 5분과 30초의 규칙적인 시간 그리드로 설정되었다. 추가로 `aggregatets` 함수는 모든 측정 가능한 간격으로 사용할 수 있으며,  `align.by` 와 `align.period` 를 설정하여 호출할 수 있다. 이런 경우에 먼저 가격들에 정규 시간 그리드를 적용한 다음, 정규 기간 동안의 수익을 기반으로 측정 값을 계산한다.
+
+다른 동기화 기능은 갱신 시간이다. 고빈도 데이터에서 함수 `refreshTime` 를 사용하면 시계열을 동기화할 수 있지만 반드시 같은 시간 그리드는 아니다. 갱신 시간은 마지막 갱신 뒤 최소 하나의 거래가 이루어진 시점이다. 
+
+다음은 예제 코드이다.
+
+```R
+data("sample_tdata");
+data("sample_qdata");
+
+stock1 = sample_tdata$PRICE;
+stock2 = sample_qdata$BID;
+
+mPrice_1min = cbind(aggregatePrice(stock1),aggregatePrice(stock2));
+
+mPrice_Refresh = refreshTime(list(stock1,stock2));
+
+rbpcov1 = rBPCov(mPrice_1min,makeReturns=TRUE);
+rbpcov2 = rBPCov(mPrice_Refresh,makeReturns=TRUE);
+
+rtscov = rTSCov(list(stock1,stock2));
+```
+
+
+
+**변동성 측정**
+
