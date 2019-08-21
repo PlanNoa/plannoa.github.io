@@ -1,6 +1,6 @@
 ---
 layout: tag-blog
-title: club
+title: Club
 slug: club
 category: etc
 menu: false
