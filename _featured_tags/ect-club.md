@@ -2,8 +2,8 @@
 layout: tag-blog
 title: club
 slug: club
-category: diary
+category: etc
 menu: false
-order: 2
+order: 3
 ---
 
