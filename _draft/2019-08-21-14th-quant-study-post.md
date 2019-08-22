@@ -177,9 +177,13 @@ HAR 모델의 주요 장점은 간단하고 추정하기 쉬움에도 불구하�
 
       일반적인 `q`는 다음과 같다. ![](https://imgur.com/F5QHrsI.png)
 
-      최적화에 사용될 시작 값은 `startingvalues` 인수로 설정할 수 있다. `LB`와 `UB`는 파라미터의 범위를 설정한다. 기본 값으로 0과 Inf가 설정되어 있다. To specify how the estimation should be initialized you can use the `backcast` argument, which will be set to the unconditional estimates by default. 마지막으로 `compconst` 인자는 ω의 추정 방법을 나타내는 bool 값이다. TRUE면 ω는 최적화되고, FALSE 면 변동성이 추정되고 ω는 1에서 모든 관련 α 및 β의 합계에 무조건적 분산을 곱한 값을 뺀 값이 된다.
+      최적화에 사용될 시작 값은 `startingvalues` 인수로 설정할 수 있다. `LB`와 `UB`는 파라미터의 범위를 설정한다. 기본 값으로 0과 Inf가 설정되어 있다. To specify how the estimation should be initialized you can use the `backcast` argument, which will be set to the unconditional estimates by default. 마지막으로 `compconst` 인자는 ω의 추정 방법을 나타내는 bool 값이다. TRUE면 ω는 최적화되고, FALSE 면 변동성이 추정되고 ω는 1에서 모든 α 및 β의 합계에 무조건 분산을 곱한 값을 뺀 값이 된다.
 
    2. 출력
+
+      `heavyModel`의 출력값은 리스트다. 흥미로운 점은 리스트 내부의 `estparams`에는 매개 변수 추정치 및 이름이 포함된 행렬이 포함된다. 매개 변수는 ω 추정치, 최대 max (p)> 1 인 경우 가장 최근 지연이있는 0이 아닌 α의 추정치, 0이 아닌 경우에 대한 추정치 max (q)> 1 인 경우 가장 최근 지연이 발생한 β 추정치 순서로 나타난다. `loglikelihood` 리스트가 전체 로그 가능성을 나타내므로 사용자는 일일 로그 가능성을 평가하는 사람에게 조금 더 통찰력을 제시한다. 리스트 `convergence`는 최적화 수렴에 대한 정보를 나타낸다.
+
+      리스트 `condvar`은 조건부 분산을 담는 (T x K) xts 오브젝트다.
 
    3. 예시
 
