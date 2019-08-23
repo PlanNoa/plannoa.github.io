@@ -213,11 +213,48 @@ HAR 모델의 주요 장점은 간단하고 추정하기 쉬움에도 불구하�
 
       ![](https://imgur.com/9RoUBvA.png)
 
+      2008년 경제 대공황 시기의 급등을 확인할 수 있다.
+
 **유동성**
 
-1. Matching trades and quotes
-2. Inferred trade direction
-3. liquidity measures
+1. 가격과 거래 매칭
 
+   거래와 가격은 종종 다른 파일로 제공된다. 많은 연구와 특정 질문들에서는 거래와 가격을 병합할 필요가 있다. 거래와 가격 보고는 지연에 따라 달라질 수 있어 결코 간단한 작업이 아니다. `matchTradesQuotes` 함수는 가격과 거래를 매칭하는데 사용할 수 있다. 함수를 이용하기 위해서는 가격이 거래보다 빨리 등록되는 시간을 입력해야 한다. 기본값은 [Vergote 2005](http://highfrequency.herokuapp.com/#vergote2005)의 연구를 기반으로 2초가 책정되었다.
+
+2. 거래 방향 예측
+
+   많은 거래와 가격 데이터베이스는 개별 거래가 시장 구매인지 시장 판매 주문인지를 나타내지 않는다. `highfrequency` 는 `getTradeDirection` Lee-Ready 규칙을 사용해 거래 및 시세에 따라 거래 방향을 추론한다.
+
+3. 유동성 측정
+
+   `tqLiquidity` 함수를 사용해서 거래와 가격 데이터로 수많은 유동성 측정이 가능하다. `tqLiquidity` 의 인자는 밑의 표에서 볼 수 있다.
+
+   ![](https://imgur.com/5Nl4zWl.png)
+
+   아래는 예시 코드이다.
+
+   ```R
+   #Load data samples
+   data("sample_tdata")
+   data("sample_qdata")
+   
+   #Match the trade and quote data
+   tqdata = matchTradesQuotes(sample_tdata,sample_qdata)
+   
+   #Display information in tqdata
+   colnames(tqdata)[1:6]
+   [1] "SYMBOL" "EX"     "PRICE"  "SIZE"   "COND"   "CORR"  
+   colnames(tqdata)[7:12]
+   [1] "G127"   "BID"    "BIDSIZ" "OFR"    "OFRSIZ" "MODE"  
+   
+   #Get the inferred trade direction according to the Lee-Ready rule
+   x = getTradeDirection(tqdata)
+   
+   #Calculate the proportional realized spread:
+   prs = tqLiquidity(tqdata,sample_tdata,sample_qdata,type="prs")
+   
+   #Calculate the effective spread:
+   es = tqLiquidity(tqdata,type="es")
+   ```
 
 
