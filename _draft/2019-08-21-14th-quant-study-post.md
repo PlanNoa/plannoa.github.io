@@ -187,6 +187,32 @@ HAR 모델의 주요 장점은 간단하고 추정하기 쉬움에도 불구하�
 
    3. 예시
 
+      먼저 데이터 realized_library를 로드한다. 데이터에서 일일 수익률과 일일 실현 측정값을 선택한다. `heavyModel`의 입력 행렬은 첫 번째 열에 일일 수익률을, 두 번째 열에서 일일 실현 측정값을 가진다. 추가로 일일 수익률의 분산과 평균 실현 커널에 역추론을 추가로 설정했다.
+
+      ```R
+      # Implementation of the heavy model on DJIA:
+      data("realized_library");
+      returns  =  realized_library$Dow.Jones.Industrials.Returns; 
+      rk       =  realized_library$Dow.Jones.Industrials.Realized.Kernel; 
+      returns  = returns[!is.na(rk)];  rk = rk[!is.na(rk)]; # Remove NA's 
+      data     = cbind( returns^2, rk ); 
+      backcast = matrix( c(var(returns),mean(rk)) ,ncol=1);  
+      
+      startvalues = c(0.004,0.02,0.44,0.41,0.74,0.56); # Initial values 
+      output = heavyModel( data = as.matrix(data,ncol=2), compconst=FALSE, 
+                           startingvalues = startvalues, backcast=backcast); 
+      output$estparams
+                   [,1]
+      omega1 0.01750506
+      omega2 0.06182249
+      alpha1 0.45118753
+      alpha2 0.41204541
+      beta1  0.73834594
+      beta2  0.56367558
+      ```
+
+      ![](https://imgur.com/9RoUBvA.png)
+
 **유동성**
 
 1. Matching trades and quotes
