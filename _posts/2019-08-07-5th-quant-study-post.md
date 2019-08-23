@@ -146,3 +146,7 @@ acf(abs(sv[, 1]))
 - Stochastic Volatility
 
 이런 변동성의 움직임은 이분산성이라 불린다. 수익률을 시간에 따라 그리면 더 잘 볼 수 있다. 자기 상관이 없는 시계열은 군집 구간이 없어야 한다. 실제 금융 데이터는 군집 현상을 가지기 때문에, 고차원 모멘트에는 기억 효과가 있다.
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

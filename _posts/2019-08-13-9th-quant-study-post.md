@@ -20,3 +20,7 @@ comments: true
 이전에 말한 것처럼 변동성은 가격이 움직이는 방향은 고려하지 않는다. 오직 움직임의 진폭에만 관심을 갖는다.
 
 매수한 주식의 변동성이 작다면 주가가 크게 떨어질 확률이 낮지만, 위로 상승할 확률도 작아 큰 수익을 기대하기 어렵다. 이런 수익과 리스크의 절충 관계를 설명하는 것이 현대 포트폴리오 이론이다. 논문에서는 주로 변동성과 상관관계의 효과로 만들어진 공분산을 리스크 측정치로 사용한다. 공분산 행렬이 널리 쓰이는 이유는 해석하거나 사용하기가 용이하기 때문이다. 이는 시장이 정말 그렇게 움직인다는 뜻이 아니다.
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

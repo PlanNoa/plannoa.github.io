@@ -393,3 +393,7 @@ add_TA(TA_SMA, col = "blue", lwd = 2, on = 1)
 ![](https://imgur.com/LqKefL1.png)
 
 그래프를 보면 200일에 이동 평균선을 하회할 때 매우 큰 손실이 발생한다. 이게 전략이 간과한 부분일 것이고, 가격이 동일한 이동 평균선을 완전히 상회했다면 같은 결과가 나왔을 것이다. 이 전략을 개선하는 데 복잡한 전략이 필요하다는 것을 보여준다.
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

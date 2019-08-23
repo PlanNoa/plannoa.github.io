@@ -7,6 +7,8 @@ tag: quant
 comments: true
 ---
 
+
+
 **확률 변수**
 
 표본 공간의 원소를 숫자로 매핑한 것.
@@ -126,3 +128,8 @@ prob_estimate
 새로운 정보가 들어오면 베이즈학파의 분포는 수정된다. 
 
 결국 평균은 실제 확률에 수렴하게 된다.
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.
+

@@ -240,3 +240,6 @@ num_sell_signals
 ## [1] 160
 ```
 
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

@@ -127,3 +127,7 @@ cor(sv)
 ```
 
 두 수익률은 음의 상관관계를 갖는 것처럼 보인다. VXX가 변동성을 쫓는 주식이라는 점을 생각하면 일리가 있다.
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

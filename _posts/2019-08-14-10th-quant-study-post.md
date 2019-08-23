@@ -85,3 +85,6 @@ sharpe_ratio(equity_curve_returns[!invalid_values], 0.03)
 
 당일로 끝나는 전략이 다음 날로 이어지는 전략보다 선호될 수 있다. 후자가 자본이 많이 들 뿐만 아니라 리스크도 따라서 커진다.
 
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

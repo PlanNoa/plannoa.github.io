@@ -138,8 +138,17 @@ plot(data_out$equity_curve_x +
 다음은 고려할 사항들이다.
 
 1. 거래량 조절은 전략의 리스크 특성을 잘 반영했는가?
+
 2. 거래 신호는 전략에 잘 맞는가?
+
 3. 선견 편향이 존재하는가? 어떻게 해결할 것인가?
+
 4. 거래 비용을 고려했는가?
+
 5. 스프레드가 거래 가능한가?
+
 6. 가격 차이 베타 대비 수익률 베타가 타당한가?
+
+
+
+   이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

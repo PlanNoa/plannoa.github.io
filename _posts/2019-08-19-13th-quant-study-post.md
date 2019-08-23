@@ -255,3 +255,7 @@ head(out);
 2005-03-04 09:40:00 -0.0005614217 0.003695715 0.001896816    1.948379
 2005-03-04 09:45:00 -0.0026443880 0.003417950 0.001896816    1.801941
 ```
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

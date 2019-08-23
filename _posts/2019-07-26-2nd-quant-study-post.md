@@ -219,3 +219,7 @@ test_post_2013@teststat
 ```
 
 여기서는 시계열이 정상성을 가진다는 귀무가설을 기각하지 못했다.
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.

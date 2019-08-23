@@ -107,3 +107,7 @@ abline(a = intercept, b = slope, lty = 3)
 ```
 
 ![](https://imgur.com/0J4zkoj.png)
+
+
+
+이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.
