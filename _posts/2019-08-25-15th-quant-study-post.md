@@ -405,7 +405,32 @@ plot(otm$strike, otm$mid_quote,
 grid()
 ```
 
-SPY 옵션은 미국식 옵션이기 때문에 변동성을 위해서는 몬테카를로 접근이나 트리, 유한 차분법을 사용해야 한다.
+SPY 옵션은 미국식 옵션이기 때문에 변동성을 위해서는 몬테카를로 접근이나 트리, 유한 차분법을 사용해야 한다. `RQuantLib`의 `AmericanOption()` 이나 `ImpliedVolatility()` 함수가 이에 사용된다. 배당률과 무위험 이자율은 임의로 선택한다. 실제에서는 이런 매개변수 선택이 올바른 결과를 얻는 데 핵심적이다. 입력한 미래 가격이 적절하지 않으면 풋옵션과 콜옵션의 내재 변동성이 연속하지 않는다.
+
+```R
+# 외가격 옵션으로 내재 변동성 계싼
+otm$iv <- NA
+for(i in 1:nrow(otm)) {
+  type <- ifelse(otm$type[i] == "C", "call", "put")
+  value <- as.numeric(otm$mid_quote[i])
+  underlying <- as.numeric(otm$mid_underlying[i])
+  strike <- as.numeric(otm$strike[i])
+  dividendYield <- 0.03
+  riskFreeRate <- 0.02
+  maturity <- 101/252
+  volatility <- 0.15
+  otm$iv[i] <- AmericanOptionImpliedVolatility(type,
+    value, underlying, strike,dividendYield,
+    riskFreeRate, maturity, volatility)$impliedVol
+}
+
+plot(otm$strike, otm$iv,
+  main = "Implied Volatility skew for SPY on April 10, 2013 10:30 am",
+  xlab = "Strike",
+  ylab = "Implied Volatility",
+  cex.main = 0.8)
+grid()
+```
 
 
 
