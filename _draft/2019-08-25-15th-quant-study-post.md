@@ -18,7 +18,7 @@ comments: true
 
 옵션 계약의 프리미엄은 몇 가지 변수로 이루어진 함수다. 변수로 매도 가격 K, 현재 가격 S, 옵션 계약 만기까지의 기간 T, 현재 시점과 만기까지 기초 자산으로부터 배당의 형태로 나오는 현금 흐름 d, 무위험 이자율 r, 임시 요소 σ가 있다. 이 임시 요소는 옵션의 내재 변동성이라 불린다. 아래는 옵션의 이론 가치를 구하는 블랙 숄즈 공식이다.
 
-![](https://ww.namu.la/s/aefcf5291bfe8f53c6bd80fa15f98c3f74387f12f5d27e2da09eb9536b906797768db624053e75ea033d346b6fbf3bafa1b4af78c3d19cd6a0dc42fedb18d164ce536c8622391ef507a689248df010f8980df379b06178cec88f3a717262c149)
+![](https://imgur.com/FMfHPjz.png)
 
 c가 콜옵션 방정식, p가 풋옵션 방정식이다.
 
@@ -35,5 +35,15 @@ c가 콜옵션 방정식, p가 풋옵션 방정식이다.
 
 
 **옵션의 가치**
+
+R에는 유럽식, 미국식 옵션의 가치를 구하는 몇 가지 패키지들이 있다. 이 책에서는 `RQuantLib` 패키지를 사용한다. `RQuantLib` 은 실생활에서 모델링, 트레이딩, 리스크 관리를 하기 위한 라이브러리다.
+
+```R
+
+```
+
+
+
+
 
 이 글 Quantitative Trading with R 시리즈는 책 [Quantitative trading with R](https://www.amazon.com/Quantitative-Trading-Understanding-Mathematical-Computational/dp/1137354070)을 보고 공부한 내용들입니다.
