@@ -1,5 +1,4 @@
 ---
-
 layout: post
 title: "Quantitative Trading With R-16"
 subtitle: "최적화"

@@ -1,5 +1,4 @@
 ---
-
 layout: post
 title: "Quantitative Trading With R-15"
 subtitle: "옵션"
