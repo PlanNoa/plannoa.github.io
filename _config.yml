@@ -1,4 +1,4 @@
-# -----------------------------------------------------------------------------
+﻿# -----------------------------------------------------------------------------
 #  User configuration
 # -----------------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ tagline:             Machine Learning Engineer
 # A short description of the page, used in the sidebar and as fallback for the meta description tag.
 # Markdown enabled, but don't use more than one paragraph (enforced by `>`)
 description:         >
-  데이터 분석가를 꿈꾸는 학생입니다
+  데이터 분석가를 꿈꾸는 학생
 
 # This should be the same author as first entry in `_data/authors.yml`
 author:
