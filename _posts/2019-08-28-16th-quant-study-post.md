@@ -200,7 +200,71 @@ y <- 3.2 + 2.9 * x + rnorm(100, 0, 0.1)
 plot(x, y)
 ```
 
+x와 y 사이에는 분명 선형 관계가 존재한다. 일단 y = ax + b의 가설을 세울 수 있다. 이 a, b값을 찾는 것이 목표이다.
 
+```R
+# 최소화할 목적 함수
+objective_function <- function(y, x, a, b) {
+  value <- sum((y - (a * x + b)) ^ 2)
+  return(value)
+}
+```
+
+목적 함수의 결과를 최소화하는 a, b가 실제 값의 후보가 된다. 이 문제의 무작위 대입법은 다음과 같다.
+
+```R
+a <- seq(-10, 10, 0.25)
+b <- seq(-10, 10, 0.25)
+
+output <- list()
+z <- 1
+for(i in 1:length(a)) {
+  for(j in 1:length(b)) {
+    output[[z]] <- c(objective_function(y, x, a[i], b[j]),
+      a[i], b[j])
+    z <- z + 1
+  }
+}
+
+# 리스트로 행렬을 생성, 최솟값을 찾는다.
+mat <- do.call(rbind, output)
+colnames(mat) <- c("obj", "a", "b")
+
+smallest <- which(mat[, "obj"] == min(mat[, "obj"]))
+
+mat[smallest, ]
+##   obj      a      b
+## 2.16076 3.00000 3.25000
+```
+
+무작위 접근법이 실제 값에 근접하는 것을 볼 수 있다. a, b의 간격을 작게 할 수록 전력 최솟값에 가까워진다.
+
+```R
+a = seq(-5, 5, 0.01)
+b = seq(-5, 5, 0.01)
+
+##       obj         a         b 
+## 0.9253069 2.8900000 3.1900000 
+```
+
+무작위 탐색은 변수의 숫자나 탐색 공간의 복잡도와는 관계없이 어떤 최소화 문제에서든 매개변수를 찾아낼 수 있다. 하지만 실무에서 사용하기는 너무 오래 걸린다. 게다가 실제로는 목적 함수와 도함수가 간단히 주어지지 않는데, 이럴 경우 다른 기법으로 매개변수를 추정해야 한다.
+
+
+
+**R 최적화 순서**
+
+R은 최적화 문제를 푸는 데 필요한 과정을 담은 함수들을 제공한다. 그중 `optimize()`, `optim()`, `solve.QP()`, `DEoptim()` 등이 중요하다. 다양한 관점을 담은 외부 라이브러리도 많다.
+
+`optim()` 함수는 특정한 목적 함수를 염두에 두고 있을 때 사용한다.
+
+```R
+args(optim)
+function (par, fn, gr = NULL, ..., method = c("Nelder-Mead", 
+    "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"), lower = -Inf, 
+    upper = Inf, control = list(), hessian = FALSE) 
+```
+
+fn 인자는 최소화하는 함수를 나타낸다. 이 함수는 입력 값으로 매개변수 벡터 par을 받아 스칼라 값으로 반환한다. par인자는 초기값들의 벡터다. method 인자로는 6개의 최적화 모델을 선택할 수 있다. 'BFGS'은 준뉴턴법, 'CG'는 켤레 기울기법으로, 많은 매개변수를 갖는 문제를 풀 때 쓰인다. 
 
 
 
