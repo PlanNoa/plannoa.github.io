@@ -1,6 +1,6 @@
 ---
 layout: tag-blog
-title: Google-Analytics
+title: Google Analytics
 slug: ga
 category: data
 menu: false
