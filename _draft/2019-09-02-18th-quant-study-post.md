@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Quantitative Trading With R-16"
+title: "Quantitative Trading With R-18"
 subtitle: "최적화"
 categories: data
 tag: quant

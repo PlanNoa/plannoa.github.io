@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Quantitative Trading With R-16"
-subtitle: "최적화"
+title: "Quantitative Trading With R-17"
+subtitle: "곡선 맞춤 예제"
 categories: data
 tag: quant
 comments: true
