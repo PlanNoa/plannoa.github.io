@@ -81,7 +81,7 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
 
    - 처리과정이 간단해 매우 빠르다. 기존의 실시간 detection system과 비교해 2배정도 높은 mAP를 가진다.
    - 이미지를 한 번 보는 방식으로 class에 대한 이해도가 높다. 낮은 False-Possitive를 보인다.
-   - 객체에 대해 보다 일반적인 특징을 학습한다.
+   - 객체에 대해 보다 일반적인 특징을 학습한다.(사진으로 사람을 학습해도 그림에 그려진 사람을 맞춘다)
 
    **단점**:
 
@@ -158,5 +158,89 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
 
 2. **SSD(Single Shot Detector)**
 
-   SSD는 객체 검출 속도 및 정확도 사이의 균형이 있는 알고리즘이다. SSD는 입력 이미지에 대한 CNN을  한 번만 실행하고 형상 맵(feature map)을 계산한다. 경계 상자 및 객체 분류 확률을 예측하기 위해 이 형상 맵을 3 × 3 크기로 CNN을 수행한다. SSD는 CNN처리 후 경계 상자를 예측한다. 이 방법은 다양한 스케일의 물체를 검출 할 수 있다.
+   SSD는 먼저 아웃 풋을 만드는 공간을 나눈다(multi feature map). 각 피쳐맵에서 다른 비율과 스케일로 box를 생성하고 모델을 통해 계산된 좌표와 클래스값, box로 최종 bounding box를 생성한다.
 
+   **장점**:
+
+   - 속도와 성능 간의 적당한 밸런스(YOLO보다 속도는 느리지만 더 정확하다.)
+
+   **단점**:
+
+   - 비교적 소량의 데이터로 학습할 때, '비교적' 정확성이 낮다.(YOLO보다는 높다.)
+
+   ![](https://imgur.com/biAYTSQ.png)
+
+   **Network**
+
+   ![](https://imgur.com/CYTfWlH.png)
+
+   **Inference Process**
+
+   ![](https://imgur.com/foS1j5b.png)
+
+   이미지를 기본적으로 VGG-16 모델을 가져와 conv4_3까지 적용하는 것으로 처리하면 300x300x3 이 38x38x512로 바뀐다. 이 38x38, 19x19, 10x10, 5x5, 3x3, 1x1의 피쳐맵은 출력과 직결된다.
+
+   ![](https://imgur.com/EYEQsRl.png)
+
+   각 피쳐맵에서 적절한 연산을 통해 우리가 예측하고자하는 bounding box의 점수와 offset을 얻게된다. 이때 conv filter size는 3 x 3 x (박스 개수 x (class score + offset))이고 자세히 나와있진 않지만 stride=1, padding=1일 것으로 추정된다. 이 6개의 피쳐맵에서 예측된 bounding box의 총 합은 8732개이다.
+
+   ![](https://imgur.com/DT8hy5y.png)
+
+   하지만 바운딩박스의 아웃풋을 다 고려하지 않는다. 각 피쳐맵당 다른 스케일을 적용해 default 박스간의 IOU를 계산한다음 미리 0.5이상이 되는 box들만 고려하고 나머지는 없애버려 위와 같이 3개의 피쳐맵에서만 box가 감지될 수 있다.
+
+   ![](https://imgur.com/1ELsqzP.png)
+
+   이게 NMS를 통해 나온 최종 결과이다.
+
+   **Train**
+
+   ![](https://imgur.com/d2rzBlk.png)
+
+   5x5 피쳐맵을 예시로 보자. 왼쪽 상단의 점을 하나의 셀로 본다. 각 셀 당 default box는 3개로 보인다. 이때 default box의 w, h는 feature map의 scale에 따라 서로 다른 s 값과 서로 다른 aspect ratio인 a 값을 이용해 도출된다. 또 default box의 cx와 cy는 feature map size와 index에 따라 결정된다.
+
+   그러고 default box와 ground truth box(정답 box)간의 IOU를 계산해 0.5 이상인 값들만 매칭시켜 loss를 계산한다.
+
+   ![](https://imgur.com/3wGIDQ0.png)
+
+   빨간색 점선이 매칭된 default box라고 한다면, 거기에 해당하는 cell의 같은 순서의 predicted bounding box의 offset만 update 되고 최종적으로는 아래와 같이 예측된다.
+
+   ![](https://imgur.com/83gDgZK.png)
+
+   **Loss**
+
+   ![](https://imgur.com/Vkfm2py.png)
+
+   loss function은 class score loss와 bounding box loss로 나뉜다.
+
+   ![](https://imgur.com/eerZGab.png)
+
+
+
+   Lloc(*x, l, g*)
+
+   (1) N 은 매치된 default boxes
+   (2) l 은 predicted bounding box
+   (3) g 는 ground truth box
+   (4) d 는 default box, cx, cy는 그 박스의 x, y좌표, w, h는 그 박스의 width, heigth
+   (5) α는 IOU가 0.5 인지 지표
+
+
+
+   Lconf(*x, c*)
+
+   (1) positive(매칭) class에 대해서는 softmax
+   (2) negative(매칭 x) class를 예측하는 값은 c^0i이고 background이면 1, 아니면 0의 값을 가질 것
+   (3) 최종 predicted class scores는 예측할 class + 배경 class 를 나타내는 지표
+
+   **Choosing scales ansd aspect ratios for default boxes**
+
+   여러 크기의 default box 생성을 위해 다음과 같은 식을 만든다.
+
+   ![](https://imgur.com/gdhvknv.png)
+
+   (1) Smin = 0.2, Smax = 0.9
+   (2) 저 식에다 넣으면 각 feature map당 서로 다른 6개의 s 값들이 나옴
+
+   **Limitation**
+
+   - 비교적 쉽게 예측되는 ratio 외에 특이한 ratio를 가진 물체는 예측할 수 없음.
