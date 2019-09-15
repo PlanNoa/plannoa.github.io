@@ -65,9 +65,7 @@ Detection에는 두 가지 방법이 있다.
 
 Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 때문에 실무에서도 많이 쓴다고 한다. 특히 자율주행같은 부분에서 더 그럴 것 같다.
 
-
-
-먼저 One-stage Method 부터 알아보자.
+일단 One-stage Method부터 알아보자.
 
 **One-stage Method**
 
@@ -77,13 +75,13 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
 
    기존의 method들과 비교했을 때 가지는 장단점이다.
 
-   **장점**:
+   **장점**
 
    - 처리과정이 간단해 매우 빠르다. 기존의 실시간 detection system과 비교해 2배정도 높은 mAP를 가진다.
    - 이미지를 한 번 보는 방식으로 class에 대한 이해도가 높다. 낮은 False-Possitive를 보인다.
    - 객체에 대해 보다 일반적인 특징을 학습한다.(사진으로 사람을 학습해도 그림에 그려진 사람을 맞춘다)
 
-   **단점**:
+   **단점**
 
    - 작은 객체에 대해 낮은 정확도를 가진다.
 
@@ -143,7 +141,7 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
    ![](https://imgur.com/Tuqd823.png)
 
    (1) 객체가 있는 셀 i의 predictor bounding box j에 대한 x, y의 loss
-   (2) 객체가 있는 셀 i의 predictor bounding box j에 대한 w, h의 loss(큰 박스에 대해 small deviation을 반영하기 위해 제곱근을 취한다.)
+   (2) 객체가 있는 셀 i의 predictor bounding box j에 대한 w, h의 loss(큰 박스에는 small deviation을 반영하기 위해 제곱근을 취한다.)
    (3) 객체가 있는 셀 i의 predictor bounding box j에 대한 confidence score의 loss(Ci = 1)
    (4) 객체가 없는 셀 i의 predictor bounding box j에 대한 confidence score의 loss(Ci = 1)
    (5) 객체가 있는 셀 i의 conditional class probability의 loss(Correct class c: pi(c)=1, otherwise: pi(c)=0)
@@ -160,11 +158,11 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
 
    SSD는 먼저 아웃 풋을 만드는 공간을 나눈다(multi feature map). 각 피쳐맵에서 다른 비율과 스케일로 box를 생성하고 모델을 통해 계산된 좌표와 클래스값, box로 최종 bounding box를 생성한다.
 
-   **장점**:
+   **장점**
 
    - 속도와 성능 간의 적당한 밸런스(YOLO보다 속도는 느리지만 더 정확하다.)
 
-   **단점**:
+   **단점**
 
    - 비교적 소량의 데이터로 학습할 때, '비교적' 정확성이 낮다.(YOLO보다는 높다.)
 
@@ -216,7 +214,7 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
 
 
 
-   Lloc(*x, l, g*)
+   Lloc(*x, l, g*)(box score)
 
    (1) N 은 매치된 default boxes
    (2) l 은 predicted bounding box
@@ -224,9 +222,7 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
    (4) d 는 default box, cx, cy는 그 박스의 x, y좌표, w, h는 그 박스의 width, heigth
    (5) α는 IOU가 0.5 인지 지표
 
-
-
-   Lconf(*x, c*)
+   Lconf(*x, c*)(class score)
 
    (1) positive(매칭) class에 대해서는 softmax
    (2) negative(매칭 x) class를 예측하는 값은 c^0i이고 background이면 1, 아니면 0의 값을 가질 것
@@ -243,4 +239,59 @@ Two-stage Method가 먼저 나왔다. One-stage Method가 깔끔하고, 쉽기 �
 
    **Limitation**
 
-   - 비교적 쉽게 예측되는 ratio 외에 특이한 ratio를 가진 물체는 예측할 수 없음.
+- 비교적 쉽게 예측되는 ratio 외에 특이한 ratio를 가진 물체는 예측할 수 없음.
+
+
+
+Two-stage Method는 R-CNN류만 알아보겠다.
+
+**Two-stage Method**
+
+1. **R-CNN**
+
+   **장점**
+
+   **단점**
+
+   **Network**
+
+   **Inference Process**
+
+   **Precondition**
+
+   **Loss**
+
+   **Limitation**
+
+2. **Fast R-CNN**
+
+   **장점**
+
+   **단점**
+
+   **Network**
+
+   **Inference Process**
+
+   **Precondition**
+
+   **Loss**
+
+   **Limitation**
+
+3. **Faster R-CNN**
+
+   **장점**
+
+   **단점**
+
+   **Network**
+
+   **Inference Process**
+
+   **Precondition**
+
+   **Loss**
+
+   **Limitation**
+
