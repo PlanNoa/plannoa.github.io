@@ -7,7 +7,7 @@ order: 10
 
 ## 소개 
 - Github : [https://github.com/plannoa](https://github.com/plannoa)
-- Mail : 2heewoong@gmail.com, 2heewoong@naver.com 
+- Mail : <2heewoong@naver.com>
 
 ```'Nothing is problem' is problem.``` 제 좌우명입니다.  세상에 만만히 볼 만한 일은 없으며, 사소한 일이라도 자세히 살펴봐야 한다는 뜻입니다. 데이터에 관해 토론하는 것을 좋아하고 특히 금융 분야의 데이터를 다. 현재 대덕 소프트웨어 마이스터 고등학교에 재학 중이며, 정보보안과에 재학하고 있습니다. 교내의 소프트웨어 개발과, 임베디드과보다 경험할 수 있는 것이 많을 것이라고 생각해 정보보안과에 왔습니다. 1학년때는 딥러닝 연구 동아리 modeep에 소속되어 딥러닝 수화 인식 프로젝트를 진행했고, 현재 2학년 1학기에는 마음이 잘 맞는 친구들과 모여 개발 동아리 weed를 만들었습니다. 현재 2학기에는 동아리장이 되어 여러 프로젝트를 진행중입니다.
 
