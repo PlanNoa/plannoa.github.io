@@ -1,7 +1,7 @@
 ﻿# The primary author of this blog.
 # Must be the same as `author` in `_config.yml`.
 # Change `qwtel` to your shortname (used in the front matter to set a page's author, e.g. `author: qwtel`).
-zzsza:
+plannoa:
   name:              heewoong lee
   email:             2heewoong@naver.com
 
@@ -22,7 +22,7 @@ zzsza:
   # Comment/uncommet to show/hide
   # Icons appear in order, can be rearranged:
   social:
-    facebook:        profile.php?id=100036715039741
+    facebook:        plannoa1937
     # twitter:         <username>
     # google:          <number>
     # vk:              <username>
