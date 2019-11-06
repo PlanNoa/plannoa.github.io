@@ -2,8 +2,8 @@
 layout: post
 title: "Data augmentation"
 subtitle: "이미지 부풀리기"
-categories: etc
-tag: memo
+categories: data
+tag: image
 comments: true
 ---
 
