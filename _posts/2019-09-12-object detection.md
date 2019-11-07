@@ -3,7 +3,7 @@ layout: post
 title: "Object detection"
 subtitle: "객체 검출"
 categories: data
-tags: dl
+tags: dl image
 comments: true
 ---
 
