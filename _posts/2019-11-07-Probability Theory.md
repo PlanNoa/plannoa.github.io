@@ -43,7 +43,7 @@ MLE와 비교해 MAP는 보다 더 자연스러운 결과를 얻게 된다. MLE�
 
 Bayes’ Theorem은 두 확률 변수의 사전 확률(p(XIθ))과 사후 확률(p(θIX)) 관계를 나타내는 정리다. 베이즈 학률론에 의하면 베이즈 정리는 사전확률로 사후확률을 구할 수 있다.
 
-이때 f(XIθ)를 likelihood(관측치), f(θ)를 piror(사전정보), f(θIX)를 posterior(주어진 데이터에 대한 현상의 확률)이라고 한다. 이 식을 통해서 관측치만을 사용하는 것보다 더 우수한 파라미터 추정을 할 수 있다.
+이때 f(XIθ)를 likelihood, f(θ)를 piror, f(θIX)를 posterior이라고 하며 각각은 observation(관측치), prior(사전정보), posterior(주어진 데이터에 대한 현상의 확률)을 의미한다.. 이 식을 통해서 관측치만을 사용하는 것보다 더 우수한 파라미터 추정을 할 수 있다.
 
 Bayes's Theorem을 이용해 MAP와 MLE의 관계를 적을 수 있다.
 
