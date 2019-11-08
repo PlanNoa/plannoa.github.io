@@ -11,7 +11,7 @@ comments: true
 
 MLE는 파라미터를 추정하는 방법 중 하나인데, 오직 주어진 데이터만을 토대로 추정한다. 예를 들어 p의 확률로 앞면, 1-p의 확률로 뒷면이 나오는 동전을 던져 p를 예측한다고 하자. MLE로 p를 계산하려면 단순히 앞면이 나온 횟수를 전체 횟수로 나누기만 하면 된다.
 
-더 복잡한 예시를 위해 모수 θ로 결정되는 확률변수의 모임 Dθ = (X0, X1, ... Xn)가 있고, Dθ의 pdf를 f라 하자. 그 확률변수에서 각각 값 x1, x2, ... xn을 얻었을 경우 likelihood는 다음과 같다.
+더 복잡한 예시를 위해 모수 θ로 결정되는 확률변수의 모임 Dθ = (X₁, X₂, ...)가 있고, Dθ의 pdf를 f라 하자. 그 확률변수에서 각각 값 X₁, X₂, ...을 얻었을 경우 likelihood는 다음과 같다.
 
  ![\mathcal{L}(\theta) = f_{\theta}(x_1, x_2, \cdots, x_n)](https://wikimedia.org/api/rest_v1/media/math/render/svg/a4e1f531eb40a44316ce85b1a50778199073d316)
 
