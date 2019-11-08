@@ -45,7 +45,7 @@ GMM Classification은 주어진 데이터 x가 다음 중 어떤 Gaussian distri
 
 ### EM algorithm을 이용한 GMM의 학습
 
-GMM은 두 가지의 모수를 가진다. 첫 번째는 3가지 정규분포 중 확률적으로 어디에서 속해있는가를 나타내는 π(weight) 값이고, 두 번째, 각각의 정규분포의 모수 μ,Σ(평균, 분산)이다. 첫 번째 종류의 모수를 잠재변수라고 부르며, 잠재변수가 포함된 모델은(Mixture Model)에서의 모수 추정은 [MLE](<https://plannoa.github.io/data/2019/11/07/Probability-Theory/>)로 구할 수 없기 때문에 EM알고리즘을 통해 구하게 된다.
+GMM은 두 가지의 모수를 가진다. 첫 번째는 3가지 정규분포 중 확률적으로 어디에서 속해있는가를 나타내는 π(weight) 값이고, 두 번째, 각각의 정규분포의 모수 μ,Σ(평균, 분산)이다. 첫 번째 종류의 모수를 잠재변수라고 부르며, 잠재변수가 포함된 모델은(Mixture Model)에서의 모수 추정은 [MLE](<https://plannoa.github.io/data/2019/11/07/Probability-Theory/>)로 구할 수 없기 때문에 [EM알고리즘](<https://plannoa.github.io/data/2019/11/08/EM-algorithm/>)을 통해 구하게 된다.
 
 주어진 데이터 X에 대해 EM알고리즘을 적용하여 파라미터들을 추정한다. 파라미터를 추정하기 전에 log-likelihood를 정의한다.
 
