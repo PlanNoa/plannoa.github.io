@@ -7,6 +7,8 @@ tag: ml
 comments: true
 ---
 
+### Intro
+
 EM 알고리즘은 latent variable(잠재 변수)가 존재하는 probabilistic model(확률 모형)의 maximum likelihood(최대가능도) 혹은 maximum a posterior(최대사후확률) 문제를 풀기 위한 알고리즘 중 하나이다. [GMM](<https://plannoa.github.io/data/2019/11/06/gaussian-mixture-model/>), HMM, RBM 등의 문제를 해결하는 데 사용된다.
 
 ### 잠재 변수를 가진 확률 모형
