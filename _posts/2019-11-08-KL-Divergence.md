@@ -9,7 +9,7 @@ comments: true
 
 KL-Divergence는 두 확률 분포 간의 유사도를 판단하는 척도이다.
 
-### 세 확률 분포![](C:/users/Develop/Desktop/Rplot1.png)
+### 세 확률 분포![](https://imgur.com/8PMhbaF.png)
 
 저 빨간색 확률 분포는 학생들의 전자기기 개수를 나타내는 확률 분포이다. 그리고 이 분포를 요약하기 위해 초록색의 정규 분포를 그렸다. 초록색은 N(3, 2²)를 따른다.
 
@@ -19,11 +19,11 @@ KL-Divergence는 두 확률 분포 간의 유사도를 판단하는 척도이다
 
 이런 이유에서 나온 것이 두 정규분포가 얼마나 다른 지를 표현하는 쿨백 라이블러 발산, 즉 KL-Divergence이다.
 
-![](C:/users/Develop/Desktop/KL-Divergence.png)
+![](https://imgur.com/9Ba2r9b.png)
 
 초록과 빨강 확률분포의 KL-Divergence는 대략 1.2이다. 이번에는 더 정확한 확률 분포를 그려보자.
 
-![](C:/users/Develop/Desktop/Rplot2.png)`lines(x, dnorm(x, mean = 6, sd = 1))`
+![](https://imgur.com/KUpOg54.png)`lines(x, dnorm(x, mean = 6, sd = 1))`
 
 파란색 확률분포는 붉은색 분포와 꽤 유사한 것 같다. 이 둘의 KL-Divergence는 0.4이다. 이로써 N(6, 1²)이 N(3, 2²)보다 실제 데이터를 더 잘 표현한다는 사실을 알 수 있다.
 
@@ -35,7 +35,7 @@ KL-Divergence는 두 확률 분포의 다름 정도를 설명한다.
 
 KL-Divergence(쿨백 라이블러 발산)는 Relative Entropy(상대 엔트로피)라고도 불린다. KL-Divergence는 기본적으로 두 확률 분포를 비교하기 위해서 사용한다.
 
-![](C:/users/Develop/Desktop/KL-Divergence.png)
+![](https://imgur.com/9Ba2r9b.png)
 
 KL-Divergence의 의미를 먼저 알아보자.
 
