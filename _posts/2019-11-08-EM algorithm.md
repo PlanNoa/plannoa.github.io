@@ -31,7 +31,7 @@ Latent variable은 본래 가지고 있는 random variable이 아닌 우리가 �
 
 ![](https://imgur.com/9h4kQWQ.png)
 
-위의 식에서 L(q, θ)는 Z의 marginal distribution q(Z)의 functional이고, KL(qIIp)는 q, p의 KL divergency를 의미한다. 이렇게 log-likelihood를 decompose하면 한 쪽은 random variable X, Z의 joint distribution, 다른 한 쪽은 conditional distribution(조건부 분포)으로 표현된다는 것을 알 수 있다.
+위의 식에서 L(q, θ)는 Z의 marginal distribution q(Z)의 functional이고, KL(qIIp)는 q, p의 [KL divergence](<https://plannoa.github.io/data/2019/11/08/KL-Divergence/>)를 의미한다. 이렇게 log-likelihood를 decompose하면 한 쪽은 random variable X, Z의 joint distribution, 다른 한 쪽은 conditional distribution(조건부 분포)으로 표현된다는 것을 알 수 있다.
 
 ### EM algorithm
 
@@ -39,7 +39,7 @@ KL devergency의 특성 때문에 L(q, θ)의 값이 lower bound가 된다. 고�
 
 이게 기본적인 EM 알고리즘의 아이디어인데, 말한 것처럼 E-step과 M-step을 번갈아가며 거쳐 θ와 q(Z)를 optimize한다. 이런 방식은 한 번에 수렴하기가 쉽지 않기 때문에 EM 알고리즘은 E, M step을 반복하는 iterative 알고리즘이 된다.
 
-처음 가지고 있는 θ를 θ¹이라고 정의하자. EM 알고리즘의 E-step은 먼저 θ¹의 값을 고정해두고 L(q, θ)이 최대가 되는 q(Z)의 값을 찾는 과정이다. 이 과정은 log-likelihood in p(XIθ¹)은 q(Z) 값과는 전혀 관계가 없기 때문에 L(q, θ)를 최대로 만드는 조건은 KL divergency가 0이 되는 상황이기 때문이다. KL divergency는 q(Z) = p(ZIX, θ¹)인 상황에서 0이 되기 때문에 q(Z)에 posterior distribution p(ZIX, θ¹)을 대입해서 해결할 수 있다. 정리하면, E-step은 언제나 KL-divergency를 0으로 만들고 lower bound와 likelihood를 일치시키는 과정이 된다.
+처음 가지고 있는 θ를 θ¹이라고 정의하자. EM 알고리즘의 E-step은 먼저 θ¹의 값을 고정해두고 L(q, θ)이 최대가 되는 q(Z)의 값을 찾는 과정이다. 이 과정은 log-likelihood in p(XIθ¹)은 q(Z) 값과는 전혀 관계가 없기 때문에 L(q, θ)를 최대로 만드는 조건은 KL divergence가 0이 되는 상황이기 때문이다. KL divergence는 q(Z) = p(ZIX, θ¹)인 상황에서 0이 되기 때문에 q(Z)에 posterior distribution p(ZIX, θ¹)을 대입해서 해결할 수 있다. 정리하면, E-step은 언제나 KL-divergence를 0으로 만들고 lower bound와 likelihood를 일치시키는 과정이 된다.
 
 반면에 M-step에서는 q(Z)를 고정하고 log-likelihood를 가장 크게 만드는 새 θ²을 찾는 optimization 문제를 푸는 단계가 된다. E-step에서는 update하는 variable과 log-likelihood가 서로 무관했기 때문에 log-likelihood가 증가하지 않았지만, M-step에서는 θ가 log-likelihood에 직접 영향을 미치기 때문에 log-likelihood 자체가 증가하게 된다. 또한 M-step에서 θ¹가 θ²로 바뀌었기 때문에 E-step에서 구했던 p(Z)로는 더 이상 KL-divergence가 0이 되지 않는다. 따라서 다시 E-step을 진행시켜 KL-divergence를 0으로 만들고, log-likelihood의 값을 M-step을 통해 키우는 과정을 계속 반복해야 한다.
 
