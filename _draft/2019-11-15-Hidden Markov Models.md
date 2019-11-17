@@ -92,5 +92,39 @@ Forward Algorithm과 Viterbi Algorithm 간에 가장 큰 차이점은 Viterbi의
 
 t번째 시점 j번째 상태의 backtrace는 다음과 같이 정의됩니다.
 
+![](이미지 삽입하기)
+
+### 전방확률과 후방확률
+
+HMM 학습을 하기 위해서는 후방확률 β의 개념을 알아야 한다. 전방확률 α와 반대 방향으로 계산한 것이 후방확률이다.
+
+![](이미지 삽입)
+
+먼저 전방확률부터 보자. α3(4)를 구하는 방법이다.
+
+![img](https://i.imgur.com/mbBaTch.png)
+
+후방확률 β3(4)는 다음과 같이 구한다.
+
+![img](https://i.imgur.com/bP9BdJy.png)
+
+따라서 α3(4) x β3(4)는 3번째 시점에서 4번째 상태를 가지는 모든 확률의 합을 가리킨다. 
+
+![img](https://i.imgur.com/3SQDk3b.png)
+
+![](이미지 삽입)
+
+### 베이즈 정리
+
+[베이즈 정리](<https://plannoa.github.io/data/2019/11/07/Probability-Theory/>)에 의해 다음 식이 성립한다.
+
+![](이미지 삽입)
+
+### 방출확률 업데이트와 γ
+
+
+
+
+
 
 
