@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "GMM, Gaussian Mixture Model"
-subtitle: "가우시안 혼합 모델"
+title: "Gaussian Mixture Model"
+subtitle: "GMM"
 categories: data
 tags: ml
 comments: true
