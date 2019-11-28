@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-13"
 subtitle: "고빈도 데이터"
 categories: data
-tag: quant time-series
+tag: quant ts
 comments: true
 ---
 

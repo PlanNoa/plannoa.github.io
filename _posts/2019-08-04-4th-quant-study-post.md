@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-4"
 subtitle: "데이터 필터링, R 구조식"
 categories: data
-tag: quant time-series
+tag: quant ts
 comments: true
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-2"
 subtitle: "무작위 과정, 주가 분포, 정상성, urca"
 categories: data
-tag: quant time-series
+tag: quant ts
 comments: true
 ---
 

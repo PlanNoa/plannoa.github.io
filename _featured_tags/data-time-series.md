@@ -1,7 +1,7 @@
 ---
 layout: tag-blog
 title: Time Series
-slug: time-series
+slug: ts
 category: data
 menu: false
 order: 9
