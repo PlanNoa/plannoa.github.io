@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-18"
 subtitle: "실행 시간 개선"
 categories: data
-tag: quant ts
+tag: quant, ts
 comments: true
 ---
 
