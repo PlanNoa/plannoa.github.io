@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-11"
 subtitle: "백테스팅 방법"
 categories: data
-tag: quant
+tag: quant time-series
 comments: true
 ---
 

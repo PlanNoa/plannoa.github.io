@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-17"
 subtitle: "곡선 맞춤 예제"
 categories: data
-tag: quant
+tag: quant time-series
 comments: true
 ---
 

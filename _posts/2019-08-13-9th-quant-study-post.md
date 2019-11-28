@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-9"
 subtitle: "리스크 고려"
 categories: data
-tag: quant
+tag: quant time-series
 comments: true
 ---
 

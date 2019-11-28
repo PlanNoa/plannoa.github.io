@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-1"
 subtitle: "확률 변수, 확률, 확률 분포, 베이즈학파"
 categories: data
-tag: quant
+tag: quant time-series
 comments: true
 ---
 

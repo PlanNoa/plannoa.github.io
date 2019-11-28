@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-15"
 subtitle: "옵션"
 categories: data
-tag: quant
+tag: quant time-series
 comments: true
 ---
 
