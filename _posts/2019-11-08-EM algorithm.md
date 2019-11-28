@@ -3,7 +3,7 @@ layout: post
 title: "EM algorithm"
 subtitle: "EM 알고리즘"
 categories: data
-tag: ml
+tag: ml optimization
 comments: true
 ---
 
