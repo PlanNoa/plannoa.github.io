@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-5"
 subtitle: "선형 회귀 분석의 선형성, 변동성"
 categories: data
-tag: quant ts
+tag: ts
 comments: true
 ---
 

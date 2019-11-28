@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-3"
 subtitle: "정규성의 가정, 상관관계"
 categories: data
-tag: quant ts
+tag: ts
 comments: true
 ---
 

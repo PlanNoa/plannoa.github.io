@@ -3,7 +3,7 @@ layout: post
 title: "Quantitative Trading With R-16"
 subtitle: "최적화"
 categories: data
-tag: quant ts
+tag: ts
 comments: true
 ---
 
