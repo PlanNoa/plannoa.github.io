@@ -39,9 +39,9 @@ SR기법이 가장 중요하게 쓰이는 분야 중 하나는 항공우주 분�
 
 SISR 문제에 접근하는 방법은 크게 세 가지가 존재한다.
 
-1. Interpolation-based method
-2. Reconstruction-based method
-3. Learning-based method
+1. **Interpolation-based method**
+2. **Reconstruction-based method**
+3. **Learning-based method**
 
 이미지 관련 라이브러리(OpenCV, PIL)에는 image resize 함수가 있는데, 이게 대표적인 Interpolation-based method 이다. interpolation 옵션을 다르게 사용하는 경우 이미지의 품질이 달라진다. Bicubic, Bilinear, Nearest Neighbor 등 다양한 interpolation 옵션이 있으며, 이미지의 해상도를 키워주는 경우에는 보통 Bicubic**, **Bilinear, Lanczos interpolation을 사용한다.
 
@@ -51,21 +51,21 @@ SISR 문제에 접근하는 방법은 크게 세 가지가 존재한다.
 
 ### Learning based method
 
-1. SRCNN, first deep learning based super resolution
+1. **SRCNN, first deep learning based super resolution**
 
-   딥러닝을 처음으로 SR에 적용한 논문인  [**“Image Super-Resolution Using Deep Convolutional Networks, 2014 ECCV”**](https://arxiv.org/pdf/1501.00092.pdf)  은 SRCNN이라는 이름으로 불리고,  2014년 ECCV에 공개되었다.
+   딥러닝을 처음으로 SR에 적용한 논문인  [**“Image Super-Resolution Using Deep Convolutional Networks, 2014 ECCV”**](https://arxiv.org/pdf/1501.00092.pdf)  은 **SRCNN**이라는 이름으로 불리고,  2014년 ECCV에 공개되었다.
 
    ![](https://imgur.com/O5UL137.png)
 
    논문이 나온 때가 딥 러닝이 주목받고 조금 뒤의 시점이라, 많은 layer을 쌓지는 않았고 3개의 conv layer만 사용했다. 재밌는 점은 모델의 세 layer가 각각 옛 SR 관점에서 patch extraction, nonlinear mapping, reconstruction을 담당하고 있다며 적혀있다.
 
-2. Improve SISR
+2. **Improve SISR**
 
    다음 두 논문은 기존 SRCNN에서 input 이미지를 HR 이미지의 해상도로 늘린 뒤 convolution 연산을 하는 과정에서 비효율적인 연산이 발생하고 있음을 지적하며, 이를 개선하기 위한 방법을 제안한다.
 
-   1. FSRCNN
+   1. **FSRCNN**
 
-       [“Accelerating the Super-Resolution Convolutional Neural Network, 2016 ECCV”](http://mmlab.ie.cuhk.edu.hk/projects/FSRCNN.html). SRCNN의 후속 논문이며 FSRCNN 이라는 모델 이름을 가지고 있다.
+       [“**Accelerating the Super-Resolution Convolutional Neural Network, 2016 ECCV**”](http://mmlab.ie.cuhk.edu.hk/projects/FSRCNN.html). SRCNN의 후속 논문이며 **FSRCNN** 이라는 모델 이름을 가지고 있다.
 
       ![](https://imgur.com/gby4sLp.png)
 
@@ -73,9 +73,9 @@ SISR 문제에 접근하는 방법은 크게 세 가지가 존재한다.
 
       Input 이미지를 그대로 convolution layer에 집어넣고 마지막에 feature map의 가로, 세로 크기를 키워주는 deconvolution 연산을 사용하여 HR 이미지로 만든다. 이렇게 convolution 연산을 하게 되면 마지막에 키워주는 배수에 제곱에 비례하여 연산량이 줄어들게 된다. 그 결과 SRCNN에 비해 굉장히 연산량이 줄어들었고 거의 실시간에 준하는 성능을 보일 수 있음을 강조한다. 또한 연산량이 줄어든 만큼 layer의 개수도 늘려주면서 정확도도 챙길 수 있음을 보여준다.
 
-   2. ESPCN
+   2. **ESPCN**
 
-      다음은  [“Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network, 2016 CVPR” ](https://arxiv.org/pdf/1609.05158.pdf)로, ESPCN 이라는 이름이다. 마찬가지로 이미지를 그대로 convolution layer에 집어넣지만 마지막에 feature map의 가로, 세로 크기를 키워주는 연산이 FSRCNN과 다르다. 이 논문에서는 sub-pixel convolutional layer 라는 구조를 제안하였으며, 이 연산은 pixel shuffle 혹은 depth to space 라는 이름으로도 불리는 연산이다.
+      다음은  [“**Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network, 2016 CVPR**” ](https://arxiv.org/pdf/1609.05158.pdf)로, **ESPCN** 이라는 이름이다. 마찬가지로 이미지를 그대로 convolution layer에 집어넣지만 마지막에 feature map의 가로, 세로 크기를 키워주는 연산이 FSRCNN과 다르다. 이 논문에서는 sub-pixel convolutional layer 라는 구조를 제안하였으며, 이 연산은 pixel shuffle 혹은 depth to space 라는 이름으로도 불리는 연산이다.
 
       ![](https://imgur.com/1jXQDvq.png)
 
@@ -83,4 +83,38 @@ SISR 문제에 접근하는 방법은 크게 세 가지가 존재한다.
 
       r배의 up scaling을 하고자 하는 경우, Convolutional layer를 거친 뒤 마지막 layer에서 feature map의 개수를 r 제곱개로 만들어 준 뒤, 각 feature map의 값들을 위의 그림처럼 순서대로 배치하여 1 채널의 HR 이미지로 만들어주는 방식이다. 이러한 방식을 통해 효율적인 연산이 가능하고, 하나의 layer를 통해 upscaling을 하는 대신, 여러 layer의 결과들을 종합하여 upscaling을 할 수 있어서 정확도 또한 좋아질 수 있다. 즉 ESPCN은 FSRCNN의 deconvolution layer 대비 여러 장점을 얻을 수 있으며, 
 
-3. Deeper SR
+3. **Deeper SR**
+
+   1. **VDSR**
+
+      [**“Accurate Image Super-Resolution Using Very Deep Convolutional Networks, 2016 CVPR”** ](https://cv.snu.ac.kr/research/VDSR/)논문은 **VDSR** 이라는 이름으로 불리며 Very Deep한 ConvNet 구조를 사용하여 Super Resolution했고, Deep network를 사용함으로써 기존 대비 높은 정확도를 달성했다.
+
+      ![](https://imgur.com/7kclJ3l.png)
+
+      VGG 기반의 20-layer convolutional network와 input image를 output에 더해주는 residual learning 을 사용했다. 초기에 높은 learning rate를 사용해 수렴을 잘 되게 하기 위해 gradient clipping도 같이 수행한다. 결론적으로 deep network를 이용해 기존 대비 정확도도 높이고, 학습률도 잘 수렴함을 확인할 수 있다.
+
+   2. **DRCN**
+
+      ["**Deeply-Recursive Convolutional Network for Image Super-Resolution**"](https://arxiv.org/abs/1511.04491) 논문은 최초로 Recursive learning을 사용했으며, **DRCN** 이라는 이름을 가지고 있다. 전체 모델의 학습 파라미터 수를 줄이기 위해 한 모듈을 16번 반복하는 특징을 가지고 있다.
+
+      ![](https://imgur.com/6Yudh5P.png)
+
+      다만 태생적으로 gradient vanishing이나 exploding에 취약하기 때문에 residual leraning이나 multi-supervision과 같은 학습 방법을 동시에 사용한다. 반복 중간 중간의 feature output을 모아 마지막에 weighted sum을 해 output image 를 만든다.
+
+   3. **SSResNet**, **SRDenseNet**
+
+      VDSR 논문에서 deeper model을 성공적으로 학습시켰지만 사실 VGG network 형태는 이런 깊은 모델에 적합하지 않다. 더 나은 성능을 위해 가장 쉽게 시도할 수 있는 방법은 더 깊은 모델을 사용하는 것이다. 이런 면에서 기본 모델의 골격을 Resnet이나 Densenet같이 성능이 검증된 모델로 바꾸는것이 자연스러웠다. 
+
+      가장 먼저 ResNet을 적용한 SR model은 [**Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network**](https://arxiv.org/abs/1609.04802) 로, **SRResNet**이라는 이름을 가지고 있다.
+
+      비슷하게 DenseNet을 사용한 모델로는 [**Residual Dense Network for Image Super-Resolution**](<https://arxiv.org/abs/1802.08797>), **SRDenseNet**이 있다.
+
+   4. **EDSR**
+
+      네트워크를 단순히 늘리는 것이 아니라 기존 ResNet 모델을 SISR에 더 적합하게 개선한 연구가 [**Enhanced Deep Residual Networks for Single Image Super-Resolution**](<https://arxiv.org/abs/1707.02921>) 이다. **EDSR**이라는 이름을 가진 이 모델은 성능이 매우 뛰어날 뿐만이 아니라 이후 SISR 모델들에 큰 영향을 미쳤다.
+
+      ESDR 이전의 모델들은 모두 classification 문제에서 좋은 성능을 보였던 네트워크들이 SISR 문제도 잘 해결할 것이라는 가정을 바탕으로 네트워크를 디자인했다. 하지만 high-level abstraction에 중점을 두는 classification과 low-level vision 문제인 SISR은 서로 특성이 다르다.
+
+      ![](https://imgur.com/dAueRP3.png)
+
+   5. 
