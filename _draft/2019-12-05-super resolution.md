@@ -127,3 +127,12 @@ SISR 문제에 접근하는 방법은 크게 세 가지가 존재한다.
 
       이런 global 정보는 local image patch로 유추하기 어렵기 때문에 새로운 정보를 얻을 수 있는 방법이 필요하다. 최근 모델들은 새로운 convolution, 다양한 polling 등을 이용해 non-local module을 사용한다.
 
+      사실 이런 global context 정보를 이용하기 위해 non-local filter을 사용하는 아이디어는 오래 전부터 많이 연구되었다. 대표적인 예로는 BM3D가 있다. 비교적 최근 발표된 Non-local Neural Networks라는 연구에서는 이런 관계를 밝히며, SISR 문제 외에도 global 정보를 사용해 CNN이 더 좋은 성능을 낼 수 있다고 한다.
+
+   6. **SRGAN**
+
+      최근 **Generative Adversarial Network**(생성적 적대 신경망)을 사용한 모델이 뜨고 있다. Image SR은 없는 것을 만들어내는 기술이다. 낮은 해상도의 이미지에서 정보를 쥐어짜 이미지를 복원하면, 그 다음은 그럴 듯 하게 이미지를 만들어내는 것이다.
+
+      SR 관련 논문에서는 대부분 성능 지표로 Distortion measure인 PSNR과 SSIM이라는 지표를 사용하고 있다. 하지만 PSNR, SSIM이 높다고 그럴듯한 것은 아니다. 때문에 단순한 지표를 만족시키는 것이 아니라 perceptual metric을 제안하고 사용하기 시작했다. 처음으로 이런 시도를 한 연구는 [**Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network**](<https://arxiv.org/abs/1609.04802>), SRGAN이다.
+
+      하지만 아직까지는 perceptual loss와 PNSR, SSIM이 동시에 높아지는 방법이 없기 때문에 competetion에서 이런 모델이 두각을 드러내고 있지는 않다.
