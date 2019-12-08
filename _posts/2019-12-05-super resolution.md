@@ -3,7 +3,7 @@ layout: post
 title: "Super Resolution"
 subtitle: "초해상화"
 categories: data
-tag: dl image
+tag: image
 comments: true
 ---
 
