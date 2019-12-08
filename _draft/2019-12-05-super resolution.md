@@ -117,4 +117,13 @@ SISR 문제에 접근하는 방법은 크게 세 가지가 존재한다.
 
       ![](https://imgur.com/dAueRP3.png)
 
-   5. 
+   5. **EDSR 이후**
+
+      EDSR 이후부터는 깊은 모델보다는 다른 정보를 추가할 수 있는 모듈 혹은 좀 더 가벼운 모델을 만드는 방향으로 연구 주제가 옮겨갔다.
+
+      모델의 깊이과 SISR 성능이 관계가 있음은 명확해졌으나, 단순이 ResBlock을 쌓는 것만으로는 성능 향상에 한계가 있다. 자연히 더 효과적으로 모델을 학습시킬 수 있는 방법에 관심이 집중되고, 최근에는 LR 이미지의 global 정보를 이용하는 연구들이 발표되고 있다.
+
+      지적되는 기존 모델의 문제점으로는 CNN의 receptive field size가 상대적으로 작다는 것(더 큰 receptive field size는 더 많은 global 정보를 사용하도록 도와준다.), feature의 local 정보와 global 정보가 동등히게 처리된다는 점이 있다. 
+
+      이런 global 정보는 local image patch로 유추하기 어렵기 때문에 새로운 정보를 얻을 수 있는 방법이 필요하다. 최근 모델들은 새로운 convolution, 다양한 polling 등을 이용해 non-local module을 사용한다.
+
