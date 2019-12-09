@@ -79,9 +79,7 @@ SISR 문제에 접근하는 방법은 크게 세 가지가 존재한다.
 
       ![](https://imgur.com/1jXQDvq.png)
 
-
-
-      r배의 up scaling을 하고자 하는 경우, Convolutional layer를 거친 뒤 마지막 layer에서 feature map의 개수를 r 제곱개로 만들어 준 뒤, 각 feature map의 값들을 위의 그림처럼 순서대로 배치하여 1 채널의 HR 이미지로 만들어주는 방식이다. 이러한 방식을 통해 효율적인 연산이 가능하고, 하나의 layer를 통해 upscaling을 하는 대신, 여러 layer의 결과들을 종합하여 upscaling을 할 수 있어서 정확도 또한 좋아질 수 있다. 즉 ESPCN은 FSRCNN의 deconvolution layer 대비 여러 장점을 얻을 수 있으며, 
+      r배의 up scaling을 하고자 하는 경우, Convolutional layer를 거친 뒤 마지막 layer에서 feature map의 개수를 r 제곱개로 만들어 준 뒤, 각 feature map의 값들을 위의 그림처럼 순서대로 배치하여 1 채널의 HR 이미지로 만들어주는 방식이다. 이러한 방식을 통해 효율적인 연산이 가능하고, 하나의 layer를 통해 upscaling을 하는 대신, 여러 layer의 결과들을 종합하여 upscaling을 할 수 있어서 정확도 또한 좋아질 수 있다. 즉 ESPCN은 FSRCNN의 deconvolution layer 대비 여러 장점을 얻을 수 있으며, 이 때 사용된 sub-pixel convolutional layer는 추후 연구되는 Super Resolution 연구에 많은 영향을 주고 있다.
 
 3. **Deeper SR**
 
